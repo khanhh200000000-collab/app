@@ -275,6 +275,59 @@
         .esp-loader-card.hidden {
             display: none;
         }
+        .esp-installer-shell {
+            margin-top: 0.75rem;
+            padding: 0.9rem;
+            border-radius: 18px;
+            border: 1px solid rgba(0,255,255,0.38);
+            background:
+                radial-gradient(circle at top left, rgba(0,255,255,0.08), transparent 32%),
+                radial-gradient(circle at top right, rgba(255,0,255,0.08), transparent 34%),
+                linear-gradient(180deg, rgba(10,20,26,0.96), rgba(8,14,20,0.92));
+            box-shadow: 0 0 18px rgba(0,255,255,0.08), inset 0 0 12px rgba(255,0,255,0.04);
+        }
+        .esp-installer-shell.hidden {
+            display: none;
+        }
+        .esp-installer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            gap: 0.5rem;
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #dffcff;
+        }
+        .esp-installer-header .left {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+        }
+        .esp-installer-header .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #7ef7d7;
+            box-shadow: 0 0 10px rgba(126,247,215,0.9);
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+        .esp-installer-header .tag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            border: 1px solid rgba(0,255,255,0.35);
+            background: rgba(0,255,255,0.06);
+            color: #b9f7ff;
+            font-weight: 700;
+        }
+        .esp-installer-stage {
+            padding: 0.5rem;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.32);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
         .esp-loader-card::before {
             content: "";
             position: absolute;
@@ -677,7 +730,13 @@
                             <span>Verify</span>
                         </div>
                     </div>
-                    <div id="espInstallerContainer" class="mt-2 hidden"></div>
+                    <div id="espInstallerContainer" class="esp-installer-shell hidden">
+                        <div class="esp-installer-header">
+                            <div class="left"><span class="dot"></span> ESP32 Firmware Hub</div>
+                            <div class="tag">WebTools</div>
+                        </div>
+                        <div class="esp-installer-stage"></div>
+                    </div>
                 </div>
             
                 <div class="grid grid-cols-2 gap-3">
@@ -731,14 +790,14 @@
                    
                 
 <div id="logArea" class="hacker-console font-mono p-3 overflow-y-auto whitespace-pre-wrap h-[220px]">
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╔══════════════════════════════════════════════════╗</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ███████║██╔████╔██║█████╗  ██║  ██║███████║██║  ██║║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║██╔══██║██║  ██║║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██║  ██║██║ ╚═╝ ██║███████╗██████╔╝██║  ██║██████╔╝║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═════╝ ║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╚══════════════════════════════════════════════════╝</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">╔══════════════════════════════════════════════════╗</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ███████║██╔████╔██║█████╗  ██║  ██║███████║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║██╔══██║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ██║  ██║██║ ╚═╝ ██║███████╗██████╔╝██║  ██║██████╔╝║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═════╝ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">╚══════════════════════════════════════════════════╝</span>
 <span class="text-cyan-300">[BOOT_SEQUENCE]</span> AmebaD Firmware Flasher v2.1.0
 <span class="text-cyan-300">[SYSTEM_CHECK]</span> Loading system components...
 <span class="text-magenta-300">[SUCCESS]</span> Firmware server connection established
@@ -1516,15 +1575,17 @@ async function runOperation(mode) {
 
 async function installEsp32Firmware() {
     const container = document.getElementById('espInstallerContainer');
-    if (!container) return;
+    const stage = container?.querySelector('.esp-installer-stage');
+    if (!container || !stage) return;
 
-    container.innerHTML = '';
+    stage.innerHTML = '';
 
     const button = document.createElement('esp-web-install-button');
     button.setAttribute('manifest', 'firmware/ESP2/manifest.json');
     button.setAttribute('theme', 'dark');
     button.setAttribute('class', 'w-full');
-    container.appendChild(button);
+    stage.appendChild(button);
+    container.classList.remove('hidden');
 
     connectBtn.classList.remove('primary-btn');
     connectBtn.classList.add('bg-green-600');
@@ -1536,8 +1597,11 @@ async function installEsp32Firmware() {
 
 connectBtn.addEventListener('click', async () => {
     if (selectedFirmwareType === 'ESP2') {
-        if (document.querySelector('esp-web-install-button')) {
-            document.querySelector('esp-web-install-button').remove();
+        const installerButton = document.querySelector('esp-web-install-button');
+        if (installerButton) {
+            installerButton.remove();
+            const shell = document.getElementById('espInstallerContainer');
+            if (shell) shell.classList.add('hidden');
             connectBtn.classList.remove('bg-green-600');
             connectBtn.classList.add('primary-btn');
             connectBtn.innerHTML = '<i class="fas fa-plug mr-1"></i> CONNECT';
