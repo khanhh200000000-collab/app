@@ -618,20 +618,20 @@
         setInterval(updateTime, 1000);
     </script>
 <script>
-const FIRMWARE_ENDPOINT = 'html.php'; // hoặc /api/firmware nếu dùng Node.js
+const FIRMWARE_ENDPOINT = './firmware';
 
 const FIRMWARE_IDS = {
-    FLASHLOADER: 'flashloader',
-    KM0: 'km0',
-    KM4: 'km4',
-    VNK1: 'vnk1',
-    VNK2: 'vnk2',
-    VNK3: 'vnk3'
+    FLASHLOADER: './firmware/imgtool_flashloader_amebad.bin',
+    KM0: './firmware/km0_boot_all.bin',
+    KM4: './firmware/km4_boot_all.bin',
+    VNK1: './firmware/VNK1/firmware.bin',
+    VNK2: './firmware/ESP2/beechat.bin',
+    VNK3: './firmware/VNK3/km0_km4_image2.bin'
 };
 
-async function loadFirmwareById(id) {
-    const url = `${FIRMWARE_ENDPOINT}?id=${id}&t=${Date.now()}`; // chống cache
-    const response = await fetch(url, {
+async function loadFirmwareById(pathOrId) {
+    const url = `${pathOrId}?t=${Date.now()}`.replace(/\?t=.*$/, `?t=${Date.now()}`);
+    const response = await fetch(pathOrId, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -640,7 +640,7 @@ async function loadFirmwareById(id) {
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to load firmware ${id}`);
+        throw new Error(`HTTP ${response.status}: Failed to load firmware ${pathOrId}`);
     }
 
     return new Uint8Array(await response.arrayBuffer());
@@ -724,9 +724,9 @@ async function loadSystemFirmware() {
     }
 }
 
-async function checkFirmwareExists(id) {
+async function checkFirmwareExists(pathOrId) {
     try {
-        const response = await fetch(`${FIRMWARE_ENDPOINT}?id=${id}`, { method: 'HEAD' });
+        const response = await fetch(pathOrId, { method: 'HEAD' });
         return response.ok;
     } catch {
         return false;
@@ -746,13 +746,13 @@ async function loadApplicationFirmware(type) {
             break;
         case 'VNK3':
             url = FIRMWARE_IDS.VNK3;
-            name = 'VNK3_FIRMWARE_BW16';
+            name = 'ESP32 Firmware Hub';
             break;
         default:
             throw new Error(`Unknown firmware type: ${type}`);
     }
 
-    const id = FIRMWARE_IDS[type]; // id như 'vnk1', 'vnk2', ...
+    const id = FIRMWARE_IDS[type];
     if (!id) throw new Error(`Unknown firmware type: ${type}`);
 
     const statusElement = document.getElementById('firmwareStatus');
@@ -763,7 +763,6 @@ async function loadApplicationFirmware(type) {
     try {
         log('SYSTEM', `Loading ${name}...`);
 
-        // Tải firmware qua endpoint bảo vệ (get_firmware.php?id=vnk1)
         const data = await loadFirmwareById(id);
 
         // Cập nhật UI khi tải thành công
