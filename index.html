@@ -1,0 +1,1315 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNKDIY Flasher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a0033 0%, #001a33 100%);
+            font-family: 'Source Code Pro', monospace;
+        }
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff) 1;
+            border-radius: 0;
+        }
+        .hacker-console {
+            background: #0a0a12;
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.2),
+                        0 0 25px rgba(255, 0, 255, 0.2),
+                        inset 0 0 15px rgba(0, 255, 255, 0.1);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 10px;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+        }
+        .hacker-console::-webkit-scrollbar { width: 4px; }
+        .hacker-console::-webkit-scrollbar-track { background: #0a0a12; }
+        .hacker-console::-webkit-scrollbar-thumb {
+            background: linear-gradient(#00ffff, #ff00ff);
+            border-radius: 0;
+        }
+        .hacker-console::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(#ff00ff, #00ffff);
+            box-shadow: 0 0 8px #00ffff, 0 0 8px #ff00ff;
+        }
+        .primary-btn {
+            background: linear-gradient(135deg, #001a33 0%, #00ffff 50%, #ff00ff 100%);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            color: #000;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .primary-btn:hover {
+            background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        .secondary-btn {
+            background: linear-gradient(135deg, #330033 0%, #003333 100%);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #ff00ff, #00ffff) 1;
+            color: #00ffff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .secondary-btn:hover {
+            background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+        .firmware-option {
+            transition: all 0.2s ease;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 0;
+        }
+        .firmware-option:hover {
+            transform: translateY(-1px);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+        .firmware-option.active {
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            background: rgba(0, 255, 255, 0.15);
+            box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+        .hacker-header {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6), 0 0 15px rgba(255, 0, 255, 0.6);
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+        .hacker-text {
+            color: #00ffff;
+            font-size: 10px;
+  
+  
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+        .hacker-subtext {
+            color: #ff00ff;
+            font-size: 9px;
+            opacity: 0.9;
+            text-shadow: 0 0 5px rgba(255, 0, 255, 0.4);
+        }
+        .status-grid {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 6px;
+        }
+        .status-item {
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 4px;
+            background: rgba(10, 20, 40, 0.5);
+        }
+        .progress-container {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 8px;
+        }
+        .progress-bar {
+            height: 4px;
+            background: rgba(0, 255, 255, 0.15);
+            border-radius: 0;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff 0%, #ff00ff 50%, #00ffff 100%);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #00ffff, 0 0 10px #ff00ff;
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.3), rgba(255, 0, 255, 0.3), transparent);
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+        .terminal-cursor {
+            display: inline-block;
+            width: 6px;
+            height: 11px;
+            background: linear-gradient(#00ffff, #ff00ff);
+            margin-left: 1px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            box-shadow: 0 0 8px #00ffff;
+        }
+
+       
+        .user-dropdown {
+            position: fixed;
+            top: 5px; /* Đã tăng từ 20px lên 40px → cao hơn, thoáng hơn */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+        }
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            color: #00ffff;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 30px 10px rgba(0, 212, 255, 0.5);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .user-avatar:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.7);
+        }
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            opacity: 0;
+            transition: opacity 0.4s;
+            border-radius: 50%;
+        }
+        .user-avatar:hover::before {
+            opacity: 0.4;
+        }
+
+        .user-info-panel {
+            position: absolute;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            background: rgba(15, 23, 42, 0.97);
+            backdrop-filter: blur(20px);
+            border: 2px solid #00ffff;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .user-info-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(10px);
+            pointer-events: auto;
+        }
+        .user-info-panel .greeting {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        .user-info-panel .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            font-size: 1rem;
+            color: #e2e8f0;
+        }
+        .user-info-panel .info-item i {
+            width: 24px;
+            color: #00ffff;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .user-info-panel .info-item strong {
+            min-width: 80px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen p-3 md:p-4">
+    <div class="scan-line"></div>
+
+
+
+    <div class="max-w-6xl mx-auto">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-4 pb-2 gap-2 border-b-2" style="border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;">
+            <div>
+                <h1 class="hacker-header text-xl font-bold mb-0.5">
+                    <i class="fas fa-terminal mr-1"></i>VNKDIY Firmware Flasher
+                </h1>
+                <p class="hacker-text text-xs">[SYSTEM]Firmware Management for Realtek AmebaD (BW16/RTL8720)</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="connectBtn" class="primary-btn text-black px-3 py-1.5 rounded-none text-sm font-semibold transition flex items-center whitespace-nowrap">
+                    <i class="fas fa-plug mr-1"></i> CONNECT
+                </button>
+            </div>
+        </header>
+  
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+           
+            <div class="space-y-4 compact-container">
+              
+                <div id="firmwareCard" class="card p-3 rounded-none">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <h2 class="hacker-header text-base font-bold mb-0.5">FIRMWARE_SELECTION</h2>
+                            <p class="hacker-subtext text-xs">[SELECT_TARGET_FIRMWARE]</p>
+                        </div>
+                        <span id="firmwareStatus" class="hacker-text text-xs px-2 py-0.5 bg-black border-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) hidden">
+                            <i class="fas fa-spinner fa-spin mr-1"></i>PROCESSING
+                        </span>
+                    </div>
+                   
+                    <div class="mb-3">
+                        <h3 class="hacker-text text-xs font-semibold mb-1 flex items-center">
+                            <i class="fas fa-cube mr-1"></i>AVAILABLE_FIRMWARE:
+                        </h3>
+                        <div class="space-y-1">
+                            <div onclick="selectFirmware('VNK1')" class="firmware-option p-2 rounded-none cursor-pointer">
+                                <div class="flex items-center mb-1">
+                                    <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
+                                    <span class="hacker-text text-xs font-semibold">VNK1</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v1.4.2</span>
+                                </div>
+                                <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED]</p>
+                            </div>
+                           
+                            <div onclick="selectFirmware('VNK2')" class="firmware-option p-2 rounded-none cursor-pointer">
+                                <div class="flex items-center mb-1">
+                                    <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
+                                    <span class="hacker-text text-xs font-semibold">VNK2</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v4</span>
+                                </div>
+                                <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT VNKPRO]</p>
+                            </div>
+                           
+                            <div onclick="selectFirmware('VNK3')" class="firmware-option p-2 rounded-none cursor-pointer">
+                                <div class="flex items-center mb-1">
+                                    <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
+                                    <span class="hacker-text text-xs font-semibold">VNK3_FIRMWARE_BW16</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v2.1.7</span>
+                                </div>
+                                <p class="hacker-subtext text-xs mb-1">[RTL8720DN OLED]</p>
+                            </div>
+
+                            <div onclick="selectFirmware('VNK4')" class="firmware-option p-2 rounded-none cursor-pointer">
+                                <div class="flex items-center mb-1">
+                                    <div class="w-1.5 h-1.5 bg-emerald-400 mr-1.5" style="box-shadow: 0 0 8px #34d399;"></div>
+                                    <span class="hacker-text text-xs font-semibold">VNK4_ESP32</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-emerald-400/40 px-1 py-0">ESP32</span>
+                                </div>
+                                <p class="hacker-subtext text-xs mb-1">[ESP32 single-bin web installer via ESP Web Tools]</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="selectedFirmwareInfo" class="bg-black p-2 border-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) hidden">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="hacker-text text-xs font-bold mb-0.5" id="fwName">[NO_FIRMWARE]</h4>
+                                <p class="hacker-subtext text-xs mb-1" id="fwDetails">Select from list above</p>
+                                <div class="flex items-center space-x-3">
+                                    <div class="text-xs">
+                                        <div class="hacker-subtext">MEM_ADDR</div>
+                                        <div class="hacker-text text-xs font-mono">0x8006000</div>
+                                    </div>
+                                    <div class="text-xs">
+                                        <div class="hacker-subtext">FLASH_SECTOR</div>
+                                        <div class="hacker-text text-xs">0x300000-0x3B8000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="hacker-text text-lg font-bold blink" id="fwSize">--</div>
+                                <div class="hacker-subtext text-xs">SIZE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="flashBtn" disabled class="primary-btn disabled:opacity-50 disabled:cursor-not-allowed text-black py-2.5 rounded-none text-sm font-bold transition">
+                        <i class="fas fa-bolt mr-1.5"></i>FLASH
+                    </button>
+                    <button id="eraseBtn" disabled class="secondary-btn disabled:opacity-50 disabled:cursor-not-allowed py-2.5 rounded-none text-sm font-bold transition">
+                        <i class="fas fa-eraser mr-1.5"></i>ERASE
+                    </button>
+                </div>
+            
+                <div class="card p-2 rounded-none">
+                    <h4 class="hacker-text text-xs font-semibold mb-1.5 flex items-center">
+                        <i class="fas fa-server mr-1.5"></i>SYSTEM_STATUS
+                    </h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="status-item">
+                            <div class="hacker-subtext text-xs mb-0.5">CONNECTION</div>
+                            <div id="connectionStatus" class="hacker-text text-xs font-semibold">[DISCONNECTED]</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="hacker-subtext text-xs mb-0.5">FLASH_MODE</div>
+                            <div class="hacker-text text-xs font-semibold">[MANUAL_RESET]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="flex flex-col">
+              
+                <div class="card rounded-none shadow-xl p-3 h-full">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <h3 class="hacker-header text-base font-bold mb-0.5">
+                                <i class="fas fa-terminal mr-1.5"></i>OPERATION_CONSOLE
+                            </h3>
+                            <p class="hacker-subtext text-xs">[REAL-TIME_DEPLOYMENT_MONITOR]</p>
+                        </div>
+                        <div class="flex space-x-1">
+                            <button onclick="clearLog()" class="hacker-text text-xs bg-black hover:bg-cyan-500/20 border-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) px-2 py-1 transition">
+                                <i class="fas fa-trash mr-0.5"></i>CLEAR
+                            </button>
+                            <button onclick="exportLog()" class="hacker-text text-xs bg-black hover:bg-cyan-500/20 border-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) px-2 py-1 transition">
+                                <i class="fas fa-download mr-0.5"></i>EXPORT
+                            </button>
+                            <button onclick="copyLog()" class="hacker-text text-xs bg-black hover:bg-cyan-500/20 border-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) px-2 py-1 transition">
+                                <i class="fas fa-copy mr-0.5"></i>COPY
+                            </button>
+                        </div>
+                    </div>
+                   
+                
+<div id="logArea" class="hacker-console font-mono p-3 overflow-y-auto whitespace-pre-wrap h-[220px]">
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╔══════════════════════════════════════════════════╗</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ███████║██╔████╔██║█████╗  ██║  ██║███████║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║██╔══██║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██║  ██║██║ ╚═╝ ██║███████╗██████╔╝██║  ██║██████╔╝║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═════╝ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╚══════════════════════════════════════════════════╝</span>
+<span class="text-cyan-300">[BOOT_SEQUENCE]</span> AmebaD Firmware Flasher v2.1.0
+<span class="text-cyan-300">[SYSTEM_CHECK]</span> Loading system components...
+<span class="text-magenta-300">[SUCCESS]</span> Firmware server connection established
+<span class="text-magenta-300">[READY]</span> System initialized - awaiting device connection
+<span class="text-magenta-300">[PROMPT]</span> Select firmware image to begin deployment
+<span class="terminal-cursor"></span>
+                    </div>
+                   
+                    <div class="mt-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <div>
+                                <h4 class="hacker-text text-xs font-semibold flex items-center">
+                                    <i class="fas fa-chart-line mr-1.5"></i>OPERATION_PROGRESS
+                                </h4>
+                                <p id="progressText" class="hacker-subtext text-xs mt-0.5">[SYSTEM_INITIALIZED]</p>
+                            </div>
+                            <span id="progressPercent" class="hacker-header text-base font-bold blink">0%</span>
+                        </div>
+                       
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div id="progressBar" class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                       
+                        <div class="grid grid-cols-4 gap-1 mt-2">
+                            <div class="status-item">
+                                <div class="hacker-subtext text-xs mb-0.5">CONNECTION</div>
+                                <div id="statusConnection" class="hacker-text text-xs font-semibold">[IDLE]</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="hacker-subtext text-xs mb-0.5">FLASH_MODE</div>
+                                <div id="statusFlashMode" class="hacker-text text-xs font-semibold">[MANUAL]</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="hacker-subtext text-xs mb-0.5">OPERATION</div>
+                                <div id="statusOperation" class="hacker-text text-xs font-semibold">[READY]</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="hacker-subtext text-xs mb-0.5">BAUD_RATE</div>
+                                <div id="statusSpeed" class="hacker-text text-xs font-semibold">115200</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <footer class="mt-4 pt-2 border-t-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) text-center">
+            <p class="hacker-subtext text-xs">VNKDIY Firmware Flasher v1.1.0 | VNK Flash team v1 | [PRODEV-VNK]</p>
+            <p class="hacker-subtext text-xs mt-0.5 opacity-60">© 2025 Realtek AmebaD Platform</p>
+        </footer>
+    </div>
+   
+<script>
+// Firmware file paths mapping
+const FIRMWARE_PATHS = {
+    'flashloader': 'firmware/imgtool_flashloader_amebad.bin',
+    'km0': 'firmware/km0_boot_all.bin',
+    'km4': 'firmware/km4_boot_all.bin',
+    'vnk1': 'firmware/VNK1/km0_km4_image2.bin',
+    'vnk2': 'firmware/VNK2/km0_km4_image2.bin',
+    'vnk3': 'firmware/VNK3/km0_km4_image2.bin',
+    'vnk4': 'firmware/VNK4/vnk4.bin'
+};
+
+const FIRMWARE_IDS = {
+    FLASHLOADER: 'flashloader',
+    KM0: 'km0',
+    KM4: 'km4',
+    VNK1: 'vnk1',
+    VNK2: 'vnk2',
+    VNK3: 'vnk3',
+    VNK4: 'vnk4'
+};
+
+async function loadFirmwareById(id) {
+    const filePath = FIRMWARE_PATHS[id];
+    if (!filePath) {
+        throw new Error(`Unknown firmware ID: ${id}`);
+    }
+    
+    const url = `${filePath}?t=${Date.now()}`; // chống cache
+    const response = await fetch(url, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Accept': 'application/octet-stream'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to load firmware ${id} from ${filePath}`);
+    }
+
+    return new Uint8Array(await response.arrayBuffer());
+}
+
+let selectedFirmware = null;
+let selectedFirmwareType = null;
+let systemFirmwareCache = {
+    FLASHLOADER: null,
+    KM0: null,
+    KM4: null
+};
+let port = null;
+let writer = null;
+let reader = null;
+let keepReading = false;
+let inputChunks = []; 
+let inputBufferTotalLen = 0;
+
+const RET_SUCCESS = 0x06;
+const RET_SYNC = 0x15;
+const RAM_LOADER_ADDR = 0x082000;
+
+const SPEED_MAP = {
+    1500000: 0x18, 1444400: 0x17, 1382400: 0x16, 1000000: 0x15,
+    921600:  0x14, 500000:  0x13, 460800:  0x12, 380400:  0x11,
+    230400:  0x10, 153600:  0x0F, 128000:  0x0D, 115200:  0x0C
+};
+
+const connectBtn = document.getElementById('connectBtn');
+const flashBtn = document.getElementById('flashBtn');
+const eraseBtn = document.getElementById('eraseBtn');
+const logArea = document.getElementById('logArea');
+const progressBar = document.getElementById('progressBar');
+const progressPercent = document.getElementById('progressPercent');
+const progressText = document.getElementById('progressText');
+const connectionStatus = document.getElementById('connectionStatus');
+
+// Status indicators
+const statusConnection = document.getElementById('statusConnection');
+const statusFlashMode = document.getElementById('statusFlashMode');
+const statusOperation = document.getElementById('statusOperation');
+const statusSpeed = document.getElementById('statusSpeed');
+
+async function loadSystemFirmware() {
+    try {
+        log('SYSTEM', 'Loading system components...');
+        setProgress(10, '[LOADING_SYSTEM]');
+
+        log('SYSTEM', 'Loading Flashloader...');
+        systemFirmwareCache.FLASHLOADER = await loadFirmwareById(FIRMWARE_IDS.FLASHLOADER);
+        setProgress(30, '[FLASHLOADER_LOADED]');
+
+        log('SYSTEM', 'Loading KM0 Bootloader...');
+        systemFirmwareCache.KM0 = await loadFirmwareById(FIRMWARE_IDS.KM0);
+        setProgress(50, '[KM0_LOADED]');
+
+        log('SYSTEM', 'Loading KM4 Bootloader...');
+        systemFirmwareCache.KM4 = await loadFirmwareById(FIRMWARE_IDS.KM4);
+        setProgress(70, '[KM4_LOADED]');
+
+        // Kiểm tra tồn tại VNK1, VNK2, VNK3 (dùng HEAD request)
+        const appPromises = [
+            checkFirmwareExists(FIRMWARE_IDS.VNK1),
+            checkFirmwareExists(FIRMWARE_IDS.VNK2),
+            checkFirmwareExists(FIRMWARE_IDS.VNK3)
+        ];
+
+        const results = await Promise.allSettled(appPromises);
+        const availableApps = results.filter(r => r.status === 'fulfilled' && r.value).length;
+
+        setProgress(100, '[SYSTEM_READY]');
+        log('SUCCESS', `System ready. ${availableApps} firmware images available.`);
+
+        flashBtn.disabled = false;
+        eraseBtn.disabled = false;
+
+    } catch (error) {
+        log('ERROR', `System error: ${error.message}`);
+        alert('[ERROR] Failed to load system firmware.');
+    }
+}
+
+async function checkFirmwareExists(id) {
+    try {
+        const filePath = FIRMWARE_PATHS[id];
+        if (!filePath) return false;
+        
+        const response = await fetch(filePath, { method: 'HEAD' });
+        return response.ok;
+    } catch {
+        return false;
+    }
+}
+
+async function installEsp32Firmware() {
+    const wrapperId = 'esp32InstallContainer';
+    const existing = document.getElementById(wrapperId);
+    if (existing) existing.remove();
+
+    const target = document.getElementById('selectedFirmwareInfo');
+    const wrapper = document.createElement('div');
+    wrapper.id = wrapperId;
+    wrapper.className = 'mt-3 p-2 border border-emerald-400/60 bg-black';
+    wrapper.innerHTML = '<div class="hacker-subtext text-xs mb-2">[ESP32_WEB_TOOLS_READY]</div>';
+
+    const installButton = document.createElement('esp-web-install-button');
+    installButton.setAttribute('manifest', 'firmware/VNK4/manifest.json');
+    installButton.setAttribute('theme', 'dark');
+    installButton.setAttribute('color', '#00ffff');
+    installButton.setAttribute('erase-first', 'true');
+    installButton.setAttribute('class', 'w-full');
+    wrapper.appendChild(installButton);
+    target.appendChild(wrapper);
+
+    log('SYSTEM', 'ESP32 Web Tools ready. Connect the board and run install.');
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        if (typeof installButton.install === 'function') {
+            installButton.install();
+        }
+    } catch (error) {
+        log('ERROR', `ESP32 installer failed: ${error.message}`);
+    }
+
+    return true;
+}
+
+async function loadApplicationFirmware(type) {
+    let url, name;
+    switch(type) {
+        case 'VNK1':
+            url = FIRMWARE_IDS.VNK1;
+            name = 'VNK1';
+            break;
+        case 'VNK2':
+            url = FIRMWARE_IDS.VNK2;
+            name = 'VNK2';
+            break;
+        case 'VNK3':
+            url = FIRMWARE_IDS.VNK3;
+            name = 'VNK3_FIRMWARE_BW16';
+            break;
+        case 'VNK4':
+            url = FIRMWARE_IDS.VNK4;
+            name = 'VNK4_ESP32';
+            break;
+        default:
+            throw new Error(`Unknown firmware type: ${type}`);
+    }
+
+    const id = FIRMWARE_IDS[type]; // id như 'vnk1', 'vnk2', ...
+    if (!id) throw new Error(`Unknown firmware type: ${type}`);
+
+    const statusElement = document.getElementById('firmwareStatus');
+    statusElement.classList.remove('hidden');
+    statusElement.classList.add('border-green-500');
+    statusElement.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>LOADING...';
+
+    try {
+        log('SYSTEM', `Loading ${name}...`);
+
+        // Tải firmware qua endpoint bảo vệ (get_firmware.php?id=vnk1)
+        const data = await loadFirmwareById(id);
+
+        // Cập nhật UI khi tải thành công
+        statusElement.classList.remove('border-green-500');
+        statusElement.classList.add('border-green-700');
+        statusElement.innerHTML = '<i class="fas fa-check mr-1"></i>LOADED';
+
+        log('SUCCESS', `${name} loaded (${(data.length / 1024).toFixed(1)} KB)`);
+
+        // Cập nhật kích thước firmware trong phần thông tin đã chọn
+        const fwSize = document.getElementById('fwSize');
+        if (fwSize) {
+            fwSize.textContent = `${(data.length / 1024).toFixed(1)}KB`;
+        }
+
+        return data;
+
+    } catch (error) {
+        // Xử lý lỗi tải firmware
+        statusElement.classList.remove('border-green-500');
+        statusElement.classList.add('border-red-500');
+        statusElement.innerHTML = '<i class="fas fa-times mr-1"></i>FAILED';
+
+        log('ERROR', `Failed to load firmware ${name}: ${error.message}`);
+
+        // Cập nhật kích thước thành FAILED nếu có hiển thị
+        const fwSize = document.getElementById('fwSize');
+        if (fwSize) {
+            fwSize.textContent = 'FAILED';
+        }
+
+        throw error; // Để hàm gọi nó (selectFirmware) bắt và xử lý tiếp
+    }
+}
+// ============================================================================
+// UI FUNCTIONS
+// ============================================================================
+
+function clearLog() {
+    logArea.innerHTML = `<span class="text-green-500">╔══════════════════════════════════════════════════╗</span>
+<span class="text-green-500">║                OPERATION CONSOLE                ║</span>
+<span class="text-green-500">╚══════════════════════════════════════════════════╝</span>
+
+<span class="text-cyan-400">[SYSTEM]</span> Console cleared
+<span class="text-green-400">[READY]</span> Awaiting operations
+<span class="terminal-cursor"></span>`;
+    log('SYSTEM', 'Console cleared');
+}
+
+function exportLog() {
+    const logContent = logArea.textContent;
+    const blob = new Blob([logContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `amebad-flash-${new Date().toISOString().slice(0,10)}.log`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    log('SYSTEM', 'Log exported');
+}
+
+function copyLog() {
+    const logContent = logArea.textContent;
+    navigator.clipboard.writeText(logContent).then(() => {
+        log('SYSTEM', 'Log copied');
+    }).catch(err => {
+        log('ERROR', 'Copy failed');
+    });
+}
+
+async function selectFirmware(type) {
+    // Remove active class from all options
+    document.querySelectorAll('.firmware-option').forEach(el => {
+        el.classList.remove('active');
+    });
+    
+    // Add active class to selected option
+    const selectedEl = event.currentTarget;
+    selectedEl.classList.add('active');
+    
+    selectedFirmwareType = 'prebuilt';
+    selectedFirmware = type;
+    
+    // Update firmware info display
+    const infoDiv = document.getElementById('selectedFirmwareInfo');
+    const fwName = document.getElementById('fwName');
+    const fwDetails = document.getElementById('fwDetails');
+    const fwSize = document.getElementById('fwSize');
+    
+    let name = '', details = '';
+    
+    switch(type) {
+        case 'VNK1':
+            name = '[VNK1]';
+            details = 'RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED';
+            break;
+        case 'VNK2':
+            name = '[VNK2]';
+            details = 'RTL8720DN BW16-KIT + VNKPRO ';
+            break;
+        case 'VNK3':
+            name = '[VNK3_FIRMWARE_BW16]';
+            details = 'RTL8720DN OLED ';
+            break;
+        case 'VNK4':
+            name = '[VNK4_ESP32]';
+            details = 'ESP32 single-bin firmware via ESP Web Tools';
+            break;
+    }
+    
+    fwName.textContent = name;
+    fwDetails.textContent = details;
+    fwSize.textContent = type === 'VNK4' ? 'WEBTOOLS' : 'LOADING...';
+    infoDiv.classList.remove('hidden');
+    
+    log('SELECTION', `Selected: ${name}`);
+    
+    // Load the firmware
+    try {
+        if (type === 'VNK4') {
+            await installEsp32Firmware();
+            selectedFirmware = null;
+            statusOperation.textContent = '[ESP32_WEBTOOLS]';
+            return;
+        }
+
+        const firmwareData = await loadApplicationFirmware(type);
+        fwSize.textContent = `${(firmwareData.length / 1024).toFixed(1)}KB`;
+        selectedFirmware = firmwareData;
+        statusOperation.textContent = '[READY]';
+    } catch (error) {
+        selectedFirmware = null;
+        fwSize.textContent = 'FAILED';
+        log('ERROR', `Load failed: ${error.message}`);
+    }
+}
+
+function log(level, msg) {
+    const timestamp = new Date().toLocaleTimeString([], {hour12: false});
+    const span = document.createElement('span');
+    span.innerHTML = `<br><span class="text-cyan-400">[${timestamp}]</span> `;
+    
+    // Color code based on level - hacker style
+    if (level === 'SYSTEM') {
+        span.innerHTML += `<span class="text-cyan-400">[SYS]</span> ${msg}`;
+    } else if (level === 'SUCCESS') {
+        span.innerHTML += `<span class="text-green-400">[OK]</span> ${msg}`;
+    } else if (level === 'ERROR') {
+        span.innerHTML += `<span class="text-red-400">[ERR]</span> ${msg}`;
+    } else if (level === 'FLASH') {
+        span.innerHTML += `<span class="text-yellow-400">[FLASH]</span> ${msg}`;
+    } else if (level === 'SELECTION') {
+        span.innerHTML += `<span class="text-purple-400">[SEL]</span> ${msg}`;
+    } else if (level === 'INFO') {
+        span.innerHTML += `<span class="text-blue-400">[INFO]</span> ${msg}`;
+    } else {
+        span.innerHTML += msg;
+    }
+    
+    // Add cursor at the end
+    const cursor = document.querySelector('.terminal-cursor');
+    if (cursor) {
+        cursor.remove();
+    }
+    
+    logArea.appendChild(span);
+    
+    // Add cursor back
+    const cursorSpan = document.createElement('span');
+    cursorSpan.className = 'terminal-cursor';
+    logArea.appendChild(cursorSpan);
+    
+    logArea.scrollTop = logArea.scrollHeight;
+}
+
+function setProgress(percent, status) {
+    progressBar.style.width = `${percent}%`;
+    progressPercent.textContent = `${Math.floor(percent)}%`;
+    if (status) progressText.textContent = `[${status}]`;
+}
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// ============================================================================
+// SERIAL COMMUNICATION FUNCTIONS
+// ============================================================================
+
+async function readLoop() {
+    keepReading = true;
+    while (port && port.readable && keepReading) {
+        try {
+            const { value, done } = await reader.read();
+            if (done) break;
+            if (value) {
+                inputChunks.push(value);
+                inputBufferTotalLen += value.length;
+                if (inputBufferTotalLen > 2000000) {
+                    const remove = inputChunks.shift();
+                    inputBufferTotalLen -= remove.length;
+                }
+            }
+        } catch (error) { break; }
+    }
+}
+
+async function readBytes(count, timeoutMs = 2000) {
+    const startTime = Date.now();
+    while (inputBufferTotalLen < count) {
+        if (Date.now() - startTime > timeoutMs) throw new Error("[TIMEOUT]");
+        await sleep(5);
+    }
+    const ret = new Uint8Array(count);
+    let offset = 0;
+    while (offset < count) {
+        const chunk = inputChunks[0];
+        const needed = count - offset;
+        if (chunk.length <= needed) {
+            ret.set(chunk, offset);
+            offset += chunk.length;
+            inputBufferTotalLen -= chunk.length;
+            inputChunks.shift();
+        } else {
+            ret.set(chunk.slice(0, needed), offset);
+            inputChunks[0] = chunk.slice(needed);
+            inputBufferTotalLen -= needed;
+            offset += needed;
+        }
+    }
+    return ret;
+}
+
+async function readOneByte(timeoutMs = 1000) {
+    const buf = await readBytes(1, timeoutMs);
+    return buf[0];
+}
+
+async function flushBuffer() {
+    inputChunks = [];
+    inputBufferTotalLen = 0;
+}
+
+async function resetToFlashMode() {
+    if (!port) return;
+    log('SYSTEM', "Entering flash mode...");
+    statusFlashMode.textContent = "[FLASH_MODE]";
+    await port.setSignals({ requestToSend: true, dataTerminalReady: false });
+    await sleep(500);
+    await port.setSignals({ requestToSend: false, dataTerminalReady: true });
+    await sleep(200);
+    await port.setSignals({ requestToSend: false, dataTerminalReady: false });
+    await sleep(500);
+}
+
+async function resetToBoot() {
+    if (!port) return;
+    log('SYSTEM', "Resetting to boot...");
+    statusFlashMode.textContent = "[BOOT_MODE]";
+    await port.setSignals({ requestToSend: true, dataTerminalReady: false });
+    await sleep(500);
+    await port.setSignals({ requestToSend: false, dataTerminalReady: false });
+}
+
+async function waitForSync(length, attempts = 500) {
+    let found = 0;
+    while (found < length && attempts > 0) {
+        try {
+            const b = await readOneByte(50);
+            if (b === RET_SYNC) found++;
+        } catch (e) {}
+        attempts--;
+    }
+    return found === length;
+}
+
+async function sendCmd(cmdBuf) {
+    if (cmdBuf[0] !== 0x07) {
+        if (!await waitForSync(1, 20)) {} 
+    }
+    await writer.write(cmdBuf);
+    const start = Date.now();
+    while (Date.now() - start < 5000) {
+        try {
+            const b = await readOneByte(200);
+            if (b === RET_SUCCESS) return true;
+            if (b === RET_SYNC) continue; 
+        } catch(e) {}
+    }
+    return false;
+}
+
+function calcPacketChecksum(data) {
+    let sum = 0;
+    for (let b of data) sum += b;
+    return (0xFF + sum) & 0xFF;
+}
+
+async function writeBlock(addr, data, prefix, startPercent, endPercent, startSeqId) {
+    const size = data.length;
+    const numPackets = Math.ceil(size / 1024);
+    log('FLASH', `Writing ${size} bytes to 0x${addr.toString(16)}...`);
+    if (!await waitForSync(1)) throw new Error("[SYNC_TIMEOUT]");
+    let seqId = startSeqId;
+    for (let i = 0; i < numPackets; i++) {
+        const chunkStart = i * 1024;
+        const chunkEnd = Math.min(chunkStart + 1024, size);
+        const chunk = data.slice(chunkStart, chunkEnd);
+        const packet = new Uint8Array(1032);
+        const view = new DataView(packet.buffer);
+        const currentAddr = addr + chunkStart;
+        const currentSeq = (seqId + i) & 0xFF;
+        packet[0] = 0x02;
+        packet[1] = currentSeq;
+        packet[2] = (~currentSeq) & 0xFF;
+        view.setUint32(3, currentAddr, true); 
+        packet.set(chunk, 7);
+        if (chunk.length < 1024) packet.fill(0xFF, 7 + chunk.length, 1031); 
+        packet[1031] = calcPacketChecksum(packet.slice(0, 1031));
+        let retries = 0;
+        let success = false;
+        while (!success && retries < 10) {
+            await writer.write(packet);
+            try {
+                const b = await readOneByte(500);
+                if (b === RET_SUCCESS) success = true;
+            } catch (e) {}
+            if(!success) {
+                retries++;
+                await sleep(50);
+            }
+        }
+        if (!success) throw new Error(`[WRITE_FAIL_${i}]`);
+        const packetProgress = (i + 1) / numPackets;
+        const totalProgress = startPercent + (packetProgress * (endPercent - startPercent));
+        setProgress(totalProgress, `${prefix} (${Math.round(packetProgress*100)}%)`);
+    }
+    return seqId + numPackets; 
+}
+
+async function changeBaudRate(targetBaud) {
+    if (!SPEED_MAP[targetBaud]) { log('ERROR', `Baud ${targetBaud} unsupported`); return; }
+    log('SYSTEM', `Switching to ${targetBaud} baud...`);
+    statusSpeed.textContent = `${targetBaud}`;
+    const cmd = new Uint8Array([0x05, SPEED_MAP[targetBaud]]);
+    await sendCmd(cmd);
+    keepReading = false;
+    try { await reader.cancel(); } catch(e) {}
+    await writer.close();
+    await port.close();
+    await sleep(200);
+    await port.open({ baudRate: parseInt(targetBaud) });
+    writer = port.writable.getWriter();
+    reader = port.readable.getReader();
+    flushBuffer();
+    readLoop();
+    if (!await sendCmd(new Uint8Array([0x07]))) throw new Error("[BAUD_FAIL]");
+    if (!await waitForSync(1)) throw new Error("[SYNC_FAIL]");
+    log('SUCCESS', `Baud ${targetBaud} OK`);
+}
+
+async function runOperation(mode) {
+    try {
+        if (!port) { 
+            log('ERROR', "[NO_DEVICE] Connect device first.");
+            alert("[ERROR] Connect device first!"); 
+            return; 
+        }
+        
+        let operations = [];
+        let loaderData = null;
+
+        if (!selectedFirmware) {
+            throw new Error("[NO_FIRMWARE] Select firmware first!");
+        }
+        
+        // Check if system firmware is loaded
+        if (!systemFirmwareCache.FLASHLOADER || !systemFirmwareCache.KM0 || !systemFirmwareCache.KM4) {
+            throw new Error("[SYSTEM_NOT_LOADED] Reload application.");
+        }
+        
+        // Use system flashloader and bootloaders
+        loaderData = systemFirmwareCache.FLASHLOADER;
+        
+        operations.push({ 
+            addr: 0x8000000, 
+            data: systemFirmwareCache.KM0, 
+            name: "KM0_BOOT" 
+        });
+        operations.push({ 
+            addr: 0x8004000, 
+            data: systemFirmwareCache.KM4, 
+            name: "KM4_BOOT" 
+        });
+        
+        // Add application firmware
+        let appData;
+        if (selectedFirmwareType === 'prebuilt') {
+            if (!selectedFirmware || !(selectedFirmware instanceof Uint8Array)) {
+                throw new Error("[FIRMWARE_ERROR]");
+            }
+            appData = selectedFirmware;
+            operations.push({ 
+                addr: 0x8006000, 
+                data: appData, 
+                name: "APP_FW" 
+            });
+        }
+
+        log('SYSTEM', '='.repeat(40));
+        log('SYSTEM', `Starting ${mode}...`);
+        flashBtn.disabled = true;
+        eraseBtn.disabled = true;
+        statusOperation.textContent = mode === 'FLASH' ? '[FLASHING]' : '[ERASING]';
+        
+        setProgress(5, "[INIT_FLASH]");
+        await resetToFlashMode();
+        await flushBuffer(); 
+
+        log('SYSTEM', "Handshaking...");
+        if (!await waitForSync(2, 50)) {
+            throw new Error("[HANDSHAKE_FAIL] Check flash mode.");
+        }
+        log('SUCCESS', "Handshake OK");
+
+        const targetBaud = '1500000';
+        if (targetBaud != 115200) await changeBaudRate(targetBaud);
+
+        log('FLASH', "Loading flashloader...");
+        await writeBlock(RAM_LOADER_ADDR, loaderData, "[FLASHLOADER]", 10, 30, 1);
+        
+        log('SYSTEM', "Executing flashloader...");
+        if (!await waitForSync(1)) throw new Error("[EXEC_TIMEOUT]"); 
+        await sendCmd(new Uint8Array([0x04]));
+        await sleep(500);
+
+        log('SYSTEM', "Reinit 115200...");
+        keepReading = false;
+        try { await reader.cancel(); } catch(e) {}
+        await writer.close();
+        await port.close();
+        await sleep(100);
+        await port.open({ baudRate: 115200 });
+        writer = port.writable.getWriter();
+        reader = port.readable.getReader();
+        flushBuffer();
+        readLoop();
+
+        if (!await waitForSync(2)) throw new Error("[FLASHLOADER_FAIL]");
+        
+        if (mode === 'ERASE') {
+             setProgress(50, "[ERASING...]");
+             await sendCmd(new Uint8Array([0x26, 0x01, 0x01, 0x00]));
+             
+             const eraseAddr = 0x300000;
+             const eraseSize = 0xB8000;
+             const numSectors = Math.floor((eraseSize + 4095) / 4096);
+             const cmdBuf = new Uint8Array(6);
+             const view = new DataView(cmdBuf.buffer);
+             cmdBuf[0] = 0x17;
+             view.setUint32(1, eraseAddr, true);
+             cmdBuf[5] = numSectors & 0xFF; 
+             
+             log('FLASH', `Erase: 0x${eraseAddr.toString(16)}, Sectors:${numSectors}`);
+             if (!await waitForSync(1)) throw new Error("[ERASE_SYNC_FAIL]"); 
+             await writer.write(cmdBuf);
+             
+             let success = false;
+             for(let i=0; i<3500; i++) { 
+                 try {
+                    const b = await readOneByte(100);
+                    if (b === RET_SUCCESS) { success = true; break; }
+                 } catch(e) {}
+                 if(i%10 === 0) setProgress(50 + (i/70), "[ERASING...]");
+             }
+             if (!success) throw new Error("[ERASE_TIMEOUT]");
+             log('SUCCESS', "Erase complete");
+        } else {
+            log('FLASH', '-' . repeat(40));
+            log('FLASH', "Phase 1: Preparation");
+            await sendCmd(new Uint8Array([0x26, 0x01, 0x01, 0x00]));
+
+            let currentProgress = 30;
+            const progressStep = 20 / operations.length;
+
+            for (let op of operations) {
+                const sectors = Math.floor((op.data.length + 4095) / 4096);
+                const eraseCmd = new Uint8Array(6);
+                const view = new DataView(eraseCmd.buffer);
+                eraseCmd[0] = 0x17;
+                view.setUint32(1, op.addr, true);
+                eraseCmd[5] = sectors & 0xFF;
+                
+                log('FLASH', `Erasing ${op.name}...`);
+                if (!await waitForSync(1)) throw new Error("[ERASE_SYNC_FAIL]"); 
+                await writer.write(eraseCmd);
+                
+                let eSuccess = false;
+                for(let i=0; i<500; i++) {
+                     try {
+                        const b = await readOneByte(100);
+                        if (b === RET_SUCCESS) { eSuccess = true; break; }
+                     } catch(e) {}
+                }
+                if (!eSuccess) throw new Error(`[ERASE_FAIL:${op.name}]`);
+                currentProgress += progressStep;
+                setProgress(currentProgress, `[ERASED:${op.name}]`);
+                log('SUCCESS', `${op.name} erased`);
+            }
+
+            if (targetBaud != 115200) {
+                log('SYSTEM', "Switching to high speed...");
+                await changeBaudRate(targetBaud);
+            }
+
+            log('FLASH', '-' . repeat(40));
+            log('FLASH', "Phase 2: Programming");
+            const writeStep = 30 / operations.length;
+            
+            let globalSeqId = 1; 
+            
+            for (let op of operations) {
+                globalSeqId = await writeBlock(op.addr, op.data, `[PROG:${op.name}]`, currentProgress, currentProgress + writeStep, globalSeqId);
+                currentProgress += writeStep;
+                log('SUCCESS', `${op.name} programmed`);
+            }
+            
+            log('SUCCESS', "All components programmed");
+        }
+
+        setProgress(100, "[DONE]");
+        log('SYSTEM', '='.repeat(40));
+        log('SUCCESS', `${mode} completed`);
+        log('SYSTEM', "Resetting...");
+        await resetToBoot();
+        statusOperation.textContent = '[DONE]';
+
+    } catch (err) {
+        log('ERROR', `Operation failed: ${err.message}`);
+        console.error(err);
+        setProgress(0, "[FAILED]");
+        statusOperation.textContent = '[FAILED]';
+    } finally {
+        flashBtn.disabled = false;
+        eraseBtn.disabled = false;
+        statusSpeed.textContent = '115200';
+        
+        if (port) {
+            keepReading = false;
+            try { await reader.cancel(); } catch(e) {}
+            await writer.close();
+            await port.close();
+            port = null;
+            connectBtn.classList.remove('bg-green-600');
+            connectBtn.classList.add('primary-btn');
+            connectBtn.innerHTML = '<i class="fas fa-plug mr-1"></i> CONNECT';
+            connectionStatus.textContent = '[DISCONNECTED]';
+            statusConnection.textContent = '[IDLE]';
+            statusFlashMode.textContent = '[MANUAL]';
+            statusOperation.textContent = '[READY]';
+        }
+    }
+}
+
+// ============================================================================
+// EVENT LISTENERS
+// ============================================================================
+
+connectBtn.addEventListener('click', async () => {
+    if (port) {
+        keepReading = false;
+        if (reader) await reader.cancel();
+        if (writer) await writer.close();
+        await port.close();
+        port = null;
+        connectBtn.classList.remove('bg-green-600');
+        connectBtn.classList.add('primary-btn');
+        connectBtn.innerHTML = '<i class="fas fa-plug mr-1"></i> CONNECT';
+        connectionStatus.textContent = '[DISCONNECTED]';
+        statusConnection.textContent = '[IDLE]';
+        log('SYSTEM', 'Disconnected');
+        return;
+    }
+    try {
+        log('SYSTEM', 'Scanning devices...');
+        port = await navigator.serial.requestPort();
+        log('SYSTEM', 'Opening port...');
+        await port.open({ baudRate: 115200 });
+        connectBtn.classList.remove('primary-btn');
+        connectBtn.classList.add('bg-green-600');
+        connectBtn.innerHTML = '<i class="fas fa-link mr-1"></i> CONNECTED';
+        connectionStatus.textContent = '[CONNECTED]';
+        statusConnection.textContent = '[CONNECTED]';
+        writer = port.writable.getWriter();
+        reader = port.readable.getReader();
+        flushBuffer();
+        readLoop(); 
+        log('SUCCESS', 'Device connected');
+        log('INFO', 'Ready for operations');
+    } catch (e) { 
+        log('ERROR', `Connect failed: ${e.message}`);
+    }
+});
+
+flashBtn.addEventListener('click', () => runOperation('FLASH'));
+eraseBtn.addEventListener('click', () => runOperation('ERASE'));
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+// Load system firmware on page load
+document.addEventListener('DOMContentLoaded', function() {
+    log('SYSTEM', 'AmebaD Flasher v2.1.0 initialized');
+    loadSystemFirmware();
+});
+
+</script>
+
+</body>
+</html>
