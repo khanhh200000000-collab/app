@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VNKDIY Flasher</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,6 +73,32 @@
             background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
             color: #000;
             box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+        esp-web-install-button {
+            --esp-web-tools-button-color: #00f5ff;
+            --esp-web-tools-button-text-color: #00131a;
+            --esp-web-tools-button-border-radius: 12px;
+            --esp-web-tools-button-padding: 0.9rem 1.25rem;
+            --esp-web-tools-button-font-size: 0.8rem;
+            --esp-web-tools-button-font-weight: 700;
+            --esp-web-tools-button-box-shadow: 0 0 20px rgba(0, 255, 255, 0.35), 0 0 20px rgba(255, 0, 255, 0.32);
+            width: 100%;
+            max-width: 280px;
+            display: inline-block;
+        }
+        esp-web-install-button::part(button) {
+            border-radius: 12px !important;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 20px rgba(255, 0, 255, 0.25) !important;
+            font-family: 'Source Code Pro', monospace !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            border: 2px solid rgba(0, 255, 255, 0.7) !important;
+        }
+        .esp-button-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
         }
         .firmware-option {
             transition: all 0.2s ease;
@@ -309,22 +336,22 @@
                             <i class="fas fa-cube mr-1"></i>AVAILABLE_FIRMWARE:
                         </h3>
                         <div class="space-y-1">
-                            <div onclick="selectFirmware('VNK1')" class="firmware-option p-2 rounded-none cursor-pointer">
+                            <div onclick="selectFirmware('BW16')" class="firmware-option p-2 rounded-none cursor-pointer">
                                 <div class="flex items-center mb-1">
                                     <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
-                                    <span class="hacker-text text-xs font-semibold">VNK1</span>
+                                    <span class="hacker-text text-xs font-semibold">BW16</span>
                                     <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v1.4.2</span>
                                 </div>
                                 <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED]</p>
                             </div>
                            
-                            <div onclick="selectFirmware('VNK2')" class="firmware-option p-2 rounded-none cursor-pointer">
+                            <div onclick="selectFirmware('ESP32')" class="firmware-option p-2 rounded-none cursor-pointer">
                                 <div class="flex items-center mb-1">
                                     <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
-                                    <span class="hacker-text text-xs font-semibold">VNK2</span>
+                                    <span class="hacker-text text-xs font-semibold">ESP32</span>
                                     <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v4</span>
                                 </div>
-                                <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT VNKPRO]</p>
+                                <p class="hacker-subtext text-xs mb-1">[ESP32 board firmware via web install]</p>
                             </div>
                            
                         </div>
@@ -351,6 +378,10 @@
                                 <div class="hacker-subtext text-xs">SIZE</div>
                             </div>
                         </div>
+                    </div>
+
+                    <div id="espInstallWrap" class="esp-button-wrap hidden">
+                        <esp-web-install-button id="espInstallButton" manifest="./firmware/ESP32/manifest.json"></esp-web-install-button>
                     </div>
 
                 </div>
@@ -471,40 +502,43 @@
         const avatarBtn = document.getElementById('userAvatar');
         const panel = document.getElementById('userInfoPanel');
 
-        avatarBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            panel.classList.toggle('show');
-        });
+        if (avatarBtn && panel) {
+            avatarBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                panel.classList.toggle('show');
+            });
 
-        // Click ra ngoài để đóng
-        document.addEventListener('click', () => {
-            panel.classList.remove('show');
-        });
+            document.addEventListener('click', () => {
+                panel.classList.remove('show');
+            });
 
-        // Ngăn click trong panel làm đóng
-        panel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+            panel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
 
-        // Cập nhật thời gian thực
         function updateTime() {
+            const liveTime = document.getElementById('live-time');
+            if (!liveTime) return;
             const now = new Date();
             const timeStr = now.toLocaleTimeString('vi-VN');
             const dateStr = now.toLocaleDateString('vi-VN');
-            document.getElementById('live-time').textContent = `${dateStr} ${timeStr}`;
+            liveTime.textContent = `${dateStr} ${timeStr}`;
         }
         updateTime();
         setInterval(updateTime, 1000);
     </script>
 <script>
 const FIRMWARE_ENDPOINT = './firmware';
+const espInstallWrap = document.getElementById('espInstallWrap');
+const espInstallButton = document.getElementById('espInstallButton');
 
 const FIRMWARE_IDS = {
     FLASHLOADER: './firmware/imgtool_flashloader_amebad.bin',
     KM0: './firmware/km0_boot_all.bin',
     KM4: './firmware/km4_boot_all.bin',
-    VNK1: './firmware/VNK1/firmware.bin',
-    VNK2: './firmware/VNK2/beechat.bin'
+    BW16: './firmware/BW16/km0_km4_image2.bin',
+    ESP32: './firmware/ESP32/manifest.json'
 };
 
 async function loadFirmwareById(pathOrId) {
@@ -580,10 +614,10 @@ async function loadSystemFirmware() {
         systemFirmwareCache.KM4 = await loadFirmwareById(FIRMWARE_IDS.KM4);
         setProgress(70, '[KM4_LOADED]');
 
-        // Kiểm tra tồn tại VNK1 và VNK2 (dùng HEAD request)
+        // Kiểm tra tồn tại BW16 và ESP32 (dùng HEAD request)
         const appPromises = [
-            checkFirmwareExists(FIRMWARE_IDS.VNK1),
-            checkFirmwareExists(FIRMWARE_IDS.VNK2)
+            checkFirmwareExists(FIRMWARE_IDS.BW16),
+            checkFirmwareExists(FIRMWARE_IDS.ESP32)
         ];
 
         const results = await Promise.allSettled(appPromises);
@@ -613,13 +647,13 @@ async function checkFirmwareExists(pathOrId) {
 async function loadApplicationFirmware(type) {
     let url, name;
     switch(type) {
-        case 'VNK1':
-            url = FIRMWARE_IDS.VNK1;
-            name = 'VNK1';
+        case 'BW16':
+            url = FIRMWARE_IDS.BW16;
+            name = 'BW16';
             break;
-        case 'VNK2':
-            url = FIRMWARE_IDS.VNK2;
-            name = 'VNK2';
+        case 'ESP32':
+            url = FIRMWARE_IDS.ESP32;
+            name = 'ESP32';
             break;
         default:
             throw new Error(`Unknown firmware type: ${type}`);
@@ -719,19 +753,30 @@ async function selectFirmware(type, evt) {
     selectedFirmwareType = 'prebuilt';
     selectedFirmware = type;
 
+    if (espInstallWrap) {
+        if (type === 'ESP32') {
+            espInstallWrap.classList.remove('hidden');
+            if (espInstallButton) {
+                espInstallButton.setAttribute('manifest', './firmware/ESP32/manifest.json');
+            }
+        } else {
+            espInstallWrap.classList.add('hidden');
+        }
+    }
+
     const infoDiv = document.getElementById('selectedFirmwareInfo');
     const fwName = document.getElementById('fwName');
     const fwDetails = document.getElementById('fwDetails');
     const fwSize = document.getElementById('fwSize');
     let name = '', details = '';
     switch(type) {
-        case 'VNK1':
-            name = '[VNK1]';
+        case 'BW16':
+            name = '[BW16]';
             details = 'RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED';
             break;
-        case 'VNK2':
-            name = '[VNK2]';
-            details = 'RTL8720DN BW16-KIT + VNKPRO ';
+        case 'ESP32':
+            name = '[ESP32]';
+            details = 'ESP32 firmware via web install';
             break;
         default:
             throw new Error(`Unknown firmware type: ${type}`);
@@ -743,6 +788,13 @@ async function selectFirmware(type, evt) {
     if (fwSize) fwSize.textContent = 'LOADING...';
 
     log('SELECTION', `Selected: ${name}`);
+
+    if (type === 'ESP32') {
+        selectedFirmware = null;
+        if (fwSize) fwSize.textContent = 'WEB';
+        statusOperation.textContent = '[READY]';
+        return;
+    }
 
     try {
         const firmwareData = await loadApplicationFirmware(type);
