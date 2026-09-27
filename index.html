@@ -77,27 +77,40 @@
         esp-web-install-button {
             --esp-web-tools-button-color: #00f5ff;
             --esp-web-tools-button-text-color: #00131a;
-            --esp-web-tools-button-border-radius: 12px;
-            --esp-web-tools-button-padding: 0.9rem 1.25rem;
-            --esp-web-tools-button-font-size: 0.8rem;
-            --esp-web-tools-button-font-weight: 700;
-            --esp-web-tools-button-box-shadow: 0 0 20px rgba(0, 255, 255, 0.35), 0 0 20px rgba(255, 0, 255, 0.32);
+            --esp-web-tools-button-border-radius: 0px;
+            --esp-web-tools-button-padding: 0.95rem 1.4rem;
+            --esp-web-tools-button-font-size: 0.78rem;
+            --esp-web-tools-button-font-weight: 800;
+            --esp-web-tools-button-box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.25), 0 0 18px rgba(0, 255, 255, 0.35), 0 0 22px rgba(255, 0, 255, 0.22);
+            --esp-web-tools-button-border-color: rgba(0, 255, 255, 0.9);
+            --esp-web-tools-button-background-color: linear-gradient(135deg, #00ffff 0%, #7afcff 30%, #00d4ff 50%, #ff4df7 100%);
             width: 100%;
-            max-width: 280px;
+            max-width: 300px;
             display: inline-block;
+            filter: saturate(1.2);
         }
         esp-web-install-button::part(button) {
-            border-radius: 12px !important;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 20px rgba(255, 0, 255, 0.25) !important;
+            border-radius: 0 !important;
+            border: 2px solid rgba(0, 255, 255, 0.9) !important;
+            box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.12), 0 0 18px rgba(0, 255, 255, 0.32), 0 0 18px rgba(255, 0, 255, 0.22) !important;
+            background: linear-gradient(135deg, #00ffff 0%, #7afcff 30%, #00d4ff 50%, #ff4df7 100%) !important;
+            color: #00131a !important;
             font-family: 'Source Code Pro', monospace !important;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            border: 2px solid rgba(0, 255, 255, 0.7) !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1.5px !important;
+            font-weight: 800 !important;
+            line-height: 1.2 !important;
+            padding: 0.95rem 1.4rem !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+        }
+        esp-web-install-button::part(button):hover {
+            transform: translateY(-1px) scale(1.01) !important;
+            box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.18), 0 0 22px rgba(0, 255, 255, 0.45), 0 0 22px rgba(255, 0, 255, 0.28) !important;
+            filter: brightness(1.08) !important;
         }
         .esp-button-wrap {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             margin-top: 12px;
         }
         .firmware-option {
@@ -305,7 +318,7 @@
         <header class="flex flex-col md:flex-row justify-between items-center mb-4 pb-2 gap-2 border-b-2" style="border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;">
             <div>
                 <h1 class="hacker-header text-xl font-bold mb-0.5">
-                    <i class="fas fa-terminal mr-1"></i>VNKDIY Firmware Flasher
+                    <i class="fas fa-terminal mr-1"></i>BEERUSS DIY Firmware Flasher
                 </h1>
                 <p class="hacker-text text-xs">[SYSTEM]Firmware Management for Realtek AmebaD (BW16/RTL8720)</p>
             </div>
@@ -342,7 +355,7 @@
                                     <span class="hacker-text text-xs font-semibold">BW16</span>
                                     <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v1.4.2</span>
                                 </div>
-                                <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED]</p>
+                                <p class="hacker-subtext text-xs mb-1">[BW16 CHIP DEAUTH WIFI 5GHZ EVIL]</p>
                             </div>
                            
                             <div onclick="selectFirmware('ESP32', event)" data-fw="ESP32" class="firmware-option p-2 rounded-none cursor-pointer">
@@ -351,7 +364,7 @@
                                     <span class="hacker-text text-xs font-semibold">ESP32</span>
                                     <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v4</span>
                                 </div>
-                                <p class="hacker-subtext text-xs mb-1">[ESP32 board firmware via web install]</p>
+                                <p class="hacker-subtext text-xs mb-1">[BEECHAT ZERO]</p>
                             </div>
                            
                         </div>
@@ -497,7 +510,7 @@
         </div>
     
         <footer class="mt-4 pt-2 border-t-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) text-center">
-            <p class="hacker-subtext text-xs">VNKDIY Firmware Flasher v1.1.0 | VNK Flash team v1 | [PRODEV-VNK]</p>
+            <p class="hacker-subtext text-xs">BEERUSS DIY Firmware Flasher v1.1.0 | BEERUSS DIY team | [PRODEV-BEERUSS]</p>
             <p class="hacker-subtext text-xs mt-0.5 opacity-60">© 2025 Realtek AmebaD Platform</p>
         </footer>
     </div>
@@ -748,6 +761,43 @@ function copyLog() {
     });
 }
 
+async function applyEspInstallButtonStyle() {
+    if (!espInstallButton) return;
+
+    try {
+        if (customElements && !customElements.get('esp-web-install-button')) {
+            await customElements.whenDefined('esp-web-install-button');
+        }
+
+        espInstallButton.style.setProperty('--esp-web-tools-button-color', '#00f5ff');
+        espInstallButton.style.setProperty('--esp-web-tools-button-text-color', '#00131a');
+        espInstallButton.style.setProperty('--esp-web-tools-button-border-radius', '0px');
+        espInstallButton.style.setProperty('--esp-web-tools-button-padding', '0.95rem 1.4rem');
+        espInstallButton.style.setProperty('--esp-web-tools-button-font-size', '0.78rem');
+        espInstallButton.style.setProperty('--esp-web-tools-button-font-weight', '800');
+        espInstallButton.style.setProperty('--esp-web-tools-button-box-shadow', '0 0 0 2px rgba(0, 255, 255, 0.12), 0 0 18px rgba(0, 255, 255, 0.32), 0 0 18px rgba(255, 0, 255, 0.22)');
+        espInstallButton.style.setProperty('--esp-web-tools-button-border-color', 'rgba(0, 255, 255, 0.9)');
+        espInstallButton.style.setProperty('--esp-web-tools-button-background-color', 'linear-gradient(135deg, #00ffff 0%, #7afcff 30%, #00d4ff 50%, #ff4df7 100%)');
+
+        const shadowButton = espInstallButton.shadowRoot?.querySelector('button');
+        if (shadowButton) {
+            shadowButton.style.borderRadius = '0';
+            shadowButton.style.border = '2px solid rgba(0, 255, 255, 0.9)';
+            shadowButton.style.background = 'linear-gradient(135deg, #00ffff 0%, #7afcff 30%, #00d4ff 50%, #ff4df7 100%)';
+            shadowButton.style.color = '#00131a';
+            shadowButton.style.fontFamily = '"Source Code Pro", monospace';
+            shadowButton.style.textTransform = 'uppercase';
+            shadowButton.style.letterSpacing = '1.5px';
+            shadowButton.style.fontWeight = '800';
+            shadowButton.style.padding = '0.95rem 1.4rem';
+            shadowButton.style.boxShadow = '0 0 0 2px rgba(0, 255, 255, 0.12), 0 0 18px rgba(0, 255, 255, 0.32), 0 0 18px rgba(255, 0, 255, 0.22)';
+            shadowButton.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease';
+        }
+    } catch (error) {
+        console.warn('ESP32 button style fallback failed:', error);
+    }
+}
+
 async function ensureEsp32InstallReady() {
     if (!espInstallButton || !espInstallWrap || !espInstallError) return false;
 
@@ -773,6 +823,9 @@ async function ensureEsp32InstallReady() {
         espInstallButton.style.display = 'inline-block';
         espInstallError.classList.add('hidden');
         espInstallWrap.classList.remove('hidden');
+
+        await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 30)));
+        await applyEspInstallButtonStyle();
         return true;
     } catch (error) {
         espInstallButton.style.display = 'none';
