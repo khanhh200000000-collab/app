@@ -1,31 +1,26 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEERUSS DIY</title>
+    <title>VNKDIY Flasher</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
     <style>
         body {
-            background:
-                radial-gradient(circle at top left, rgba(0, 255, 255, 0.18), transparent 28%),
-                radial-gradient(circle at top right, rgba(255, 0, 255, 0.18), transparent 32%),
-                linear-gradient(135deg, #1a0033 0%, #001a33 100%);
+            background: linear-gradient(135deg, #1a0033 0%, #001a33 100%);
             font-family: 'Source Code Pro', monospace;
         }
         .card {
-            background: rgba(7, 10, 20, 0.76);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0,255,255,0.32);
-            border-radius: 18px;
-            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.04), inset 0 0 18px rgba(0,255,255,0.06);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff) 1;
+            border-radius: 0;
         }
         .hacker-console {
             background: #0a0a12;
@@ -51,33 +46,32 @@
         }
         .primary-btn {
             background: linear-gradient(135deg, #001a33 0%, #00ffff 50%, #ff00ff 100%);
-            border: 2px solid rgba(255,255,255,0.25);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
             color: #000;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             transition: all 0.3s ease;
-            box-shadow: 0 0 12px rgba(0,255,255,0.18), 0 0 20px rgba(255,0,255,0.12);
         }
         .primary-btn:hover {
             background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 0 18px rgba(0, 255, 255, 0.65), 0 0 28px rgba(255, 0, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.5);
         }
         .secondary-btn {
             background: linear-gradient(135deg, #330033 0%, #003333 100%);
-            border: 2px solid rgba(255,255,255,0.18);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #ff00ff, #00ffff) 1;
             color: #00ffff;
             font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            transition: all 0.25s ease;
         }
         .secondary-btn:hover {
             background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
             color: #000;
             box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
-            transform: translateY(-1px);
         }
         .firmware-option {
             transition: all 0.2s ease;
@@ -98,136 +92,6 @@
             background: rgba(0, 255, 255, 0.15);
             box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.2);
         }
-        .topbar {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.9rem;
-            border-bottom: 2px solid transparent;
-            border-image: linear-gradient(90deg, rgba(0,255,255,0.25), rgba(255,0,255,0.9), rgba(0,255,255,0.25)) 1;
-            padding-bottom: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        .topbar::after {
-            content: "";
-            position: absolute;
-            inset: auto 0 -8px 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.7), rgba(255,0,255,0.7), transparent);
-            filter: blur(1px);
-        }
-        .brand-block {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 0.85rem;
-            margin-right: auto;
-        }
-        .brand-group {
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
-            padding: 0.5rem 0.9rem 0.5rem 0.55rem;
-            border: 1px solid rgba(0,255,255,0.5);
-            border-radius: 18px;
-            background: rgba(8, 20, 30, 0.38);
-            box-shadow: 0 0 0 1px rgba(255,0,255,0.12), 0 0 18px rgba(0,255,255,0.1), inset 0 0 12px rgba(0,255,255,0.04);
-        }
-        .brand-wrap {
-            text-align: left;
-            position: relative;
-        }
-        .brand-wrap::before {
-            content: "";
-            position: absolute;
-            right: -10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,255,255,0.18), rgba(255,0,255,0.12), transparent 70%);
-            filter: blur(10px);
-            pointer-events: none;
-        }
-        .brand-logo {
-            width: 58px;
-            height: 58px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(5, 22, 34, 0.98), rgba(17, 27, 40, 0.88));
-            border: 1px solid rgba(0,255,255,0.52);
-            box-shadow: 0 0 18px rgba(0,255,255,0.18), inset 0 0 14px rgba(0,255,255,0.08);
-            padding: 0.4rem;
-            flex-shrink: 0;
-        }
-        .brand-logo svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-            filter: drop-shadow(0 0 8px rgba(0,255,255,0.28)) drop-shadow(0 0 10px rgba(255,0,255,0.2));
-        }
-        .brand-mark {
-            font-size: clamp(1.5rem, 3vw, 2.7rem);
-            line-height: 1.05;
-            letter-spacing: 0.12em;
-            font-weight: 800;
-            background: linear-gradient(90deg, #ccfaff, #7af7ff 18%, #ff8efb 55%, #f9f2ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 22px rgba(0,255,255,0.38), 0 0 22px rgba(255,0,255,0.25);
-        }
-        .brand-sub {
-            font-size: 0.62rem;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: rgba(146, 213, 255, 0.8);
-            opacity: 0.9;
-            margin-top: 0.15rem;
-        }
-        .status-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.8rem;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(7, 28, 42, 0.96), rgba(12, 42, 56, 0.9));
-            border: 1px solid rgba(0,255,255,0.50);
-            box-shadow: 0 0 20px rgba(0,255,255,0.18), inset 0 0 14px rgba(0,255,255,0.08), 0 8px 18px rgba(0,0,0,0.18);
-            color: #dffcff;
-            font-size: 0.68rem;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            white-space: nowrap;
-            position: relative;
-            overflow: hidden;
-            transform: translateY(0);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            margin-left: auto;
-        }
-        .status-chip:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 28px rgba(0,255,255,0.25), inset 0 0 18px rgba(0,255,255,0.10), 0 16px 28px rgba(0,0,0,0.2);
-        }
-        .status-chip::before {
-            content: "";
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: #3ef9b2;
-            box-shadow: 0 0 12px rgba(62,249,178,0.95), 0 0 18px rgba(62,249,178,0.8);
-            animation: pulse 1.7s ease-in-out infinite;
-            flex-shrink: 0;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(0.9); opacity: 1; }
-            50% { transform: scale(1.35); opacity: 0.72; }
-        }
         .hacker-header {
             background: linear-gradient(45deg, #00ffff, #ff00ff);
             -webkit-background-clip: text;
@@ -240,6 +104,8 @@
         .hacker-text {
             color: #00ffff;
             font-size: 10px;
+  
+  
             letter-spacing: 1px;
             text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
         }
@@ -258,355 +124,6 @@
             border: 1px solid rgba(0, 255, 255, 0.2);
             padding: 4px;
             background: rgba(10, 20, 40, 0.5);
-        }
-        .esp-loader-card {
-            position: relative;
-            overflow: hidden;
-            margin-top: 0.75rem;
-            padding: 1rem;
-            border-radius: 18px;
-            background:
-                radial-gradient(circle at top left, rgba(0, 255, 255, 0.12), transparent 28%),
-                radial-gradient(circle at top right, rgba(255, 0, 255, 0.12), transparent 35%),
-                linear-gradient(180deg, rgba(10, 18, 26, 0.98), rgba(12, 17, 23, 0.94));
-            border: 1px solid rgba(105, 240, 255, 0.45);
-            box-shadow: 0 0 22px rgba(105, 240, 255, 0.12), inset 0 0 18px rgba(255, 0, 255, 0.06);
-        }
-        .esp-loader-card.hidden {
-            display: none;
-        }
-        .esp-installer-shell {
-            margin-top: 0.75rem;
-            padding: 0.9rem;
-            border-radius: 18px;
-            border: 1px solid rgba(0,255,255,0.38);
-            background:
-                radial-gradient(circle at top left, rgba(0,255,255,0.08), transparent 32%),
-                radial-gradient(circle at top right, rgba(255,0,255,0.08), transparent 34%),
-                linear-gradient(180deg, rgba(10,20,26,0.96), rgba(8,14,20,0.92));
-            box-shadow: 0 0 18px rgba(0,255,255,0.08), inset 0 0 12px rgba(255,0,255,0.04);
-        }
-        .esp-installer-shell.hidden {
-            display: none;
-        }
-        .esp-installer-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            gap: 0.5rem;
-            font-size: 0.62rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #dffcff;
-        }
-        .esp-installer-header .left {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
-        }
-        .esp-installer-header .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #7ef7d7;
-            box-shadow: 0 0 10px rgba(126,247,215,0.9);
-            animation: pulse 1.6s ease-in-out infinite;
-        }
-        .esp-installer-header .tag {
-            padding: 0.25rem 0.5rem;
-            border-radius: 999px;
-            border: 1px solid rgba(0,255,255,0.35);
-            background: rgba(0,255,255,0.06);
-            color: #b9f7ff;
-            font-weight: 700;
-        }
-        .esp-installer-stage {
-            padding: 0.5rem;
-            border-radius: 12px;
-            background: rgba(0,0,0,0.32);
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-        .esp-hub-shell {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-        .esp-hub-topline {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            font-size: 0.62rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #dffcff;
-        }
-        .esp-hub-label {
-            opacity: 0.8;
-        }
-        .esp-hub-pill {
-            padding: 0.25rem 0.6rem;
-            border-radius: 999px;
-            border: 1px solid rgba(126, 247, 215, 0.42);
-            background: rgba(126, 247, 215, 0.12);
-            color: #9ef8e9;
-            box-shadow: 0 0 12px rgba(126, 247, 215, 0.18);
-            font-weight: 700;
-        }
-        .esp-hub-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.6rem;
-        }
-        .esp-hub-card {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            padding: 0.7rem 0.75rem;
-            border-radius: 12px;
-            border: 1px solid rgba(105, 240, 255, 0.24);
-            background: rgba(7, 18, 24, 0.75);
-            box-shadow: inset 0 0 12px rgba(105, 240, 255, 0.04);
-        }
-        .esp-hub-card span {
-            font-size: 0.56rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: rgba(170, 217, 255, 0.8);
-        }
-        .esp-hub-card strong {
-            font-size: 0.82rem;
-            letter-spacing: 0.06em;
-            color: #effcff;
-            font-weight: 700;
-        }
-        .esp-hub-card.success {
-            border-color: rgba(126, 247, 215, 0.4);
-            background: rgba(15, 31, 30, 0.72);
-        }
-        .esp-upload-box {
-            display: flex;
-            flex-direction: column;
-            gap: 0.7rem;
-            padding: 0.8rem;
-            border-radius: 14px;
-            background: rgba(0,0,0,0.28);
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-        .esp-upload-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            font-size: 0.56rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #dffcff;
-        }
-        .esp-upload-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 2rem;
-            padding: 0.2rem 0.55rem;
-            border-radius: 999px;
-            background: rgba(255, 143, 251, 0.12);
-            border: 1px solid rgba(255, 143, 251, 0.32);
-            color: #ffc9fb;
-            font-weight: 700;
-        }
-        .esp-upload-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-        }
-        .esp-upload-btn {
-            appearance: none;
-            border: 1px solid rgba(105, 240, 255, 0.32);
-            background: rgba(105, 240, 255, 0.08);
-            color: #e6feff;
-            font-size: 0.66rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            font-weight: 700;
-            padding: 0.7rem 0.9rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .esp-upload-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 12px rgba(105, 240, 255, 0.18);
-        }
-        .esp-upload-btn.primary {
-            background: linear-gradient(135deg, rgba(0,255,255,0.16), rgba(255,0,255,0.12));
-            border-color: rgba(0,255,255,0.5);
-            box-shadow: 0 0 18px rgba(0,255,255,0.12);
-        }
-        .esp-upload-btn.secondary {
-            background: rgba(0,0,0,0.2);
-            border-color: rgba(255, 143, 251, 0.32);
-            color: #ffd9fb;
-        }
-        .esp-install-summary {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.5rem;
-        }
-        .esp-install-summary > div {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-            padding: 0.65rem 0.5rem;
-            border-radius: 10px;
-            background: rgba(8, 12, 16, 0.7);
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-        .esp-install-summary small {
-            font-size: 0.52rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: rgba(170, 217, 255, 0.72);
-        }
-        .esp-install-summary strong {
-            font-size: 0.72rem;
-            color: #f3fdff;
-        }
-        .esp-loader-card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transform: translateX(-100%);
-            animation: shimmer 3.5s linear infinite;
-        }
-        @keyframes shimmer {
-            100% { transform: translateX(100%); }
-        }
-        .esp-loader-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-            margin-bottom: 0.8rem;
-            font-size: 0.62rem;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #dffcff;
-        }
-        .esp-loader-title {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
-        }
-        .esp-loader-title .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: #6bf7d2;
-            box-shadow: 0 0 10px rgba(107, 247, 210, 0.8), 0 0 16px rgba(107, 247, 210, 0.7);
-            animation: pulse 1.8s ease-in-out infinite;
-        }
-        .esp-loader-badges {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.3rem 0.55rem;
-            border-radius: 999px;
-            border: 1px solid rgba(105, 240, 255, 0.45);
-            background: rgba(105, 240, 255, 0.08);
-            color: #b9f7ff;
-            font-weight: 700;
-        }
-        .esp-loader-main {
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
-            margin-bottom: 0.8rem;
-        }
-        .esp-loader-icon {
-            width: 54px;
-            height: 54px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.14));
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            font-size: 1.4rem;
-            box-shadow: inset 0 0 18px rgba(0, 255, 255, 0.07);
-        }
-        .esp-loader-copy {
-            flex: 1;
-        }
-        .esp-loader-caption {
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: #dffcff;
-            margin-bottom: 0.22rem;
-        }
-        .esp-loader-sub {
-            font-size: 0.66rem;
-            color: #ff9ad2;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            opacity: 0.9;
-        }
-        .esp-loader-progress {
-            margin-bottom: 0.8rem;
-        }
-        .esp-loader-bar {
-            position: relative;
-            width: 100%;
-            height: 10px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(105, 240, 255, 0.3);
-            overflow: hidden;
-        }
-        .esp-loader-bar span {
-            position: absolute;
-            inset: 0 auto 0 0;
-            width: 62%;
-            border-radius: inherit;
-            background: linear-gradient(90deg, #00ffff 0%, #69f0ff 30%, #ff50d8 75%, #ff9ad2 100%);
-            box-shadow: 0 0 12px rgba(105, 240, 255, 0.7), 0 0 12px rgba(255, 80, 216, 0.5);
-            animation: loadingBar 2.2s ease-in-out infinite alternate;
-        }
-        @keyframes loadingBar {
-            0% { width: 26%; }
-            50% { width: 68%; }
-            100% { width: 86%; }
-        }
-        .esp-loader-steps {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            font-size: 0.62rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #a2dce6;
-        }
-        .esp-loader-steps span {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.5rem;
-            border-radius: 999px;
-            border: 1px solid rgba(105, 240, 255, 0.26);
-            background: rgba(105, 240, 255, 0.04);
-        }
-        .esp-loader-steps span.active {
-            color: #dffcff;
-            border-color: rgba(255, 90, 210, 0.48);
-            background: rgba(255, 90, 210, 0.08);
-            box-shadow: 0 0 12px rgba(255, 90, 210, 0.12);
         }
         .progress-container {
             background: rgba(0, 0, 0, 0.7);
@@ -653,6 +170,105 @@
             animation: blink 1s infinite;
             vertical-align: middle;
             box-shadow: 0 0 8px #00ffff;
+        }
+        .esp32-panel {
+            margin-top: 12px;
+            background: rgba(9, 15, 27, 0.9);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), 0 0 20px rgba(255, 0, 255, 0.2);
+            overflow: hidden;
+        }
+        .esp32-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(0, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.25);
+        }
+        .esp32-chip {
+            font-size: 11px;
+            color: #00ffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .esp32-badge {
+            font-size: 9px;
+            padding: 3px 8px;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.08);
+            color: #dff9ff;
+            letter-spacing: 1px;
+        }
+        .esp32-badge.waiting {
+            border-color: rgba(255, 189, 89, 0.7);
+            color: #ffd166;
+            background: rgba(255, 189, 89, 0.08);
+        }
+        .esp32-badge.ready {
+            border-color: rgba(34, 197, 94, 0.7);
+            color: #86efac;
+            background: rgba(34, 197, 94, 0.08);
+        }
+        .esp32-actions {
+            display: flex;
+            gap: 8px;
+            padding: 10px 12px 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .esp32-btn {
+            background: linear-gradient(135deg, #001a33 0%, #00ffff 50%, #ff00ff 100%);
+            color: #000;
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 8px 12px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+        .esp32-btn.ghost {
+            background: rgba(0, 0, 0, 0.2);
+            color: #00ffff;
+            border-color: rgba(0, 255, 255, 0.4);
+        }
+        .esp32-btn.close {
+            margin-left: auto;
+            background: rgba(255, 0, 0, 0.08);
+            color: #ff9aa2;
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+        .esp32-progress {
+            margin: 10px 12px 0;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            height: 10px;
+            overflow: hidden;
+        }
+        .esp32-progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+            transition: width 0.2s ease;
+        }
+        .esp32-console {
+            margin: 10px 12px 12px;
+            min-height: 120px;
+            max-height: 180px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            color: #dff9ff;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 10px;
+            line-height: 1.5;
+            padding: 8px;
+            white-space: pre-wrap;
         }
 
        
@@ -756,40 +372,21 @@
 <body class="text-gray-100 min-h-screen p-3 md:p-4">
     <div class="scan-line"></div>
 
-
+   
 
     <div class="max-w-6xl mx-auto">
-        <header class="topbar mb-4">
-            <div class="brand-block">
-                <div class="brand-group">
-                    <div class="brand-logo" aria-label="Beeruss fox logo">
-                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-                            <defs>
-                                <linearGradient id="foxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#dffcff"/>
-                                    <stop offset="35%" stop-color="#7af7ff"/>
-                                    <stop offset="70%" stop-color="#ff8efb"/>
-                                    <stop offset="100%" stop-color="#fdf2ff"/>
-                                </linearGradient>
-                            </defs>
-                            <path d="M20 15 L12 25 L22 25 L18 36 L26 32 L32 44 L38 32 L46 36 L42 25 L52 25 L44 15 L38 20 L32 12 L26 20 Z" fill="url(#foxGrad)" opacity="0.96"/>
-                            <path d="M23 27 L32 20 L41 27 L38 37 L32 44 L26 37 Z" fill="#0b1020" opacity="0.82"/>
-                            <circle cx="27.5" cy="28.5" r="1.7" fill="#0a1120"/>
-                            <circle cx="36.5" cy="28.5" r="1.7" fill="#0a1120"/>
-                            <path d="M30 34 Q32 36 34 34" stroke="#cfeaff" stroke-width="1.6" stroke-linecap="round" fill="none"/>
-                            <path d="M24 27 L18 20" stroke="#dffcff" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M40 27 L46 20" stroke="#dffcff" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <div class="brand-wrap">
-                        <div class="brand-mark">BEERUSS</div>
-                        <div class="brand-sub">DIY</div>
-                    </div>
-                </div>
+        <header class="flex flex-col md:flex-row justify-between items-center mb-4 pb-2 gap-2 border-b-2" style="border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;">
+            <div>
+                <h1 class="hacker-header text-xl font-bold mb-0.5">
+                    <i class="fas fa-terminal mr-1"></i>VNKDIY Firmware Flasher
+                </h1>
+                <p class="hacker-text text-xs">[SYSTEM]Firmware Management for Realtek AmebaD (BW16/RTL8720)</p>
             </div>
-            <button id="connectBtn" class="status-chip primary-btn flex items-center whitespace-nowrap">
-                <i class="fas fa-plug"></i> CONNECTED
-            </button>
+            <div class="flex items-center space-x-2">
+                <button id="connectBtn" class="primary-btn text-black px-3 py-1.5 rounded-none text-sm font-semibold transition flex items-center whitespace-nowrap">
+                    <i class="fas fa-plug mr-1"></i> CONNECT
+                </button>
+            </div>
         </header>
   
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -812,22 +409,31 @@
                             <i class="fas fa-cube mr-1"></i>AVAILABLE_FIRMWARE:
                         </h3>
                         <div class="space-y-1">
-                            <div onclick="selectFirmware('BW1')" class="firmware-option p-2 rounded-none cursor-pointer">
+                            <div onclick="selectFirmware('VNK1')" class="firmware-option p-2 rounded-none cursor-pointer">
                                 <div class="flex items-center mb-1">
                                     <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
-                                    <span class="hacker-text text-xs font-semibold">BW1</span>
-                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">BW16</span>
+                                    <span class="hacker-text text-xs font-semibold">VNK1</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v1.4.2</span>
                                 </div>
-                                <p class="hacker-subtext text-xs mb-1">[BW16 firmware for AmebaD]</p>
+                                <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED]</p>
                             </div>
-
-                            <div onclick="selectFirmware('ESP2')" class="firmware-option p-2 rounded-none cursor-pointer">
+                           
+                            <div onclick="selectFirmware('VNK2')" class="firmware-option p-2 rounded-none cursor-pointer">
                                 <div class="flex items-center mb-1">
-                                    <div class="w-1.5 h-1.5 bg-emerald-400 mr-1.5" style="box-shadow: 0 0 8px #34d399;"></div>
-                                    <span class="hacker-text text-xs font-semibold">ESP2</span>
-                                    <span class="ml-auto hacker-subtext text-xs border border-emerald-400/40 px-1 py-0">Beechat</span>
+                                    <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
+                                    <span class="hacker-text text-xs font-semibold">VNK2</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">v4</span>
                                 </div>
-                                <p class="hacker-subtext text-xs mb-1">[Beechat ESP32 firmware via WebTools]</p>
+                                <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT VNKPRO]</p>
+                            </div>
+                           
+                            <div data-fw="VNK3" onclick="selectFirmware('VNK3', event)" class="firmware-option p-2 rounded-none cursor-pointer">
+                                <div class="flex items-center mb-1">
+                                    <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
+                                    <span class="hacker-text text-xs font-semibold">ESP32 Firmware Hub</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">VNK3 · ESP32</span>
+                                </div>
+                                <p class="hacker-subtext text-xs mb-1">[ESP32 · FLASH VIA USB · LẤY MAC]</p>
                             </div>
                         </div>
                     </div>
@@ -855,34 +461,18 @@
                         </div>
                     </div>
 
-                    <div id="espLoaderCard" class="esp-loader-card hidden">
-                        <div class="esp-loader-top">
-                            <div class="esp-loader-title"><span class="dot"></span> ESP32 FLASHING</div>
-                            <div class="esp-loader-badges">WEBTOOLS</div>
+                    <div id="esp32HubPanel" class="esp32-panel hidden">
+                        <div class="esp32-panel-header">
+                            <span class="esp32-chip">ESP32 Firmware Hub</span>
+                            <span id="esp32HubTag" class="esp32-badge waiting">Sẵn sàng nạp</span>
                         </div>
-                        <div class="esp-loader-main">
-                            <div class="esp-loader-icon"><i class="fas fa-microchip" style="color: #dffcff;"></i></div>
-                            <div class="esp-loader-copy">
-                                <div class="esp-loader-caption">Uploading firmware to ESP32</div>
-                                <div class="esp-loader-sub">Secure boot • serial transport • OTA</div>
-                            </div>
+                        <div class="esp32-actions">
+                            <button id="esp32FlashBtn" class="esp32-btn" type="button">⚡ Flash qua USB</button>
+                            <button id="esp32MacBtn" class="esp32-btn ghost" type="button">📡 Lấy MAC</button>
+                            <button id="esp32CloseBtn" class="esp32-btn close" type="button" title="Đóng">✕</button>
                         </div>
-                        <div class="esp-loader-progress">
-                            <div class="esp-loader-bar"><span></span></div>
-                        </div>
-                        <div class="esp-loader-steps">
-                            <span class="active">Connect</span>
-                            <span>Erase</span>
-                            <span>Write</span>
-                            <span>Verify</span>
-                        </div>
-                    </div>
-                    <div id="espInstallerContainer" class="esp-installer-shell hidden">
-                        <div class="esp-installer-header">
-                            <div class="left"><span class="dot"></span> ESP32 Firmware Hub</div>
-                            <div class="tag">WebTools</div>
-                        </div>
-                        <div class="esp-installer-stage"></div>
+                        <div class="esp32-progress"><div id="esp32ProgressBar" class="esp32-progress-bar"></div></div>
+                        <pre id="esp32Console" class="esp32-console">Sẵn sàng. Kết nối board ESP32, chọn firmware và bấm "Flash qua USB" để bắt đầu.</pre>
                     </div>
                 </div>
             
@@ -937,14 +527,14 @@
                    
                 
 <div id="logArea" class="hacker-console font-mono p-3 overflow-y-auto whitespace-pre-wrap h-[220px]">
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">╔══════════════════════════════════════════════════╗</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ███████║██╔████╔██║█████╗  ██║  ██║███████║██║  ██║║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║██╔══██║██║  ██║║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ██║  ██║██║ ╚═╝ ██║███████╗██████╔╝██║  ██║██████╔╝║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">║ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═════╝ ║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">╚══════════════════════════════════════════════════╝</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╔══════════════════════════════════════════════════╗</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ███████║██╔████╔██║█████╗  ██║  ██║███████║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║██╔══██║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██║  ██║██║ ╚═╝ ██║███████╗██████╔╝██║  ██║██████╔╝║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═════╝ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╚══════════════════════════════════════════════════╝</span>
 <span class="text-cyan-300">[BOOT_SEQUENCE]</span> AmebaD Firmware Flasher v2.1.0
 <span class="text-cyan-300">[SYSTEM_CHECK]</span> Loading system components...
 <span class="text-magenta-300">[SUCCESS]</span> Firmware server connection established
@@ -994,36 +584,53 @@
         </div>
     
         <footer class="mt-4 pt-2 border-t-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) text-center">
-            <p class="hacker-subtext text-xs">BEERUSS DIY Firmware Lab | System Build v1.1.0 | [PRODEV-BEERUSS]</p>
-            <p class="hacker-subtext text-xs mt-0.5 opacity-60">© 2025 BEERUSS DIY Workspace</p>
+            <p class="hacker-subtext text-xs">VNKDIY Firmware Flasher v1.1.0 | VNK Flash team v1 | [PRODEV-VNK]</p>
+            <p class="hacker-subtext text-xs mt-0.5 opacity-60">© 2025 Realtek AmebaD Platform</p>
         </footer>
     </div>
-   
+    <script>
+        const avatarBtn = document.getElementById('userAvatar');
+        const panel = document.getElementById('userInfoPanel');
+
+        avatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panel.classList.toggle('show');
+        });
+
+        // Click ra ngoài để đóng
+        document.addEventListener('click', () => {
+            panel.classList.remove('show');
+        });
+
+        // Ngăn click trong panel làm đóng
+        panel.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Cập nhật thời gian thực
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('vi-VN');
+            const dateStr = now.toLocaleDateString('vi-VN');
+            document.getElementById('live-time').textContent = `${dateStr} ${timeStr}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
 <script>
-// Firmware file paths mapping
-const FIRMWARE_PATHS = {
-    'flashloader': 'firmware/imgtool_flashloader_amebad.bin',
-    'km0': 'firmware/km0_boot_all.bin',
-    'km4': 'firmware/km4_boot_all.bin',
-    'bw1': 'firmware/BW1/km0_km4_image2.bin',
-    'esp2': 'firmware/ESP2/beechat.bin'
-};
+const FIRMWARE_ENDPOINT = 'html.php'; // hoặc /api/firmware nếu dùng Node.js
 
 const FIRMWARE_IDS = {
     FLASHLOADER: 'flashloader',
     KM0: 'km0',
     KM4: 'km4',
-    BW1: 'bw1',
-    ESP2: 'esp2'
+    VNK1: 'vnk1',
+    VNK2: 'vnk2',
+    VNK3: 'vnk3'
 };
 
 async function loadFirmwareById(id) {
-    const filePath = FIRMWARE_PATHS[id];
-    if (!filePath) {
-        throw new Error(`Unknown firmware ID: ${id}`);
-    }
-    
-    const url = `${filePath}?t=${Date.now()}`; // chống cache
+    const url = `${FIRMWARE_ENDPOINT}?id=${id}&t=${Date.now()}`; // chống cache
     const response = await fetch(url, {
         method: 'GET',
         cache: 'no-store',
@@ -1033,7 +640,7 @@ async function loadFirmwareById(id) {
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to load firmware ${id} from ${filePath}`);
+        throw new Error(`HTTP ${response.status}: Failed to load firmware ${id}`);
     }
 
     return new Uint8Array(await response.arrayBuffer());
@@ -1095,10 +702,11 @@ async function loadSystemFirmware() {
         systemFirmwareCache.KM4 = await loadFirmwareById(FIRMWARE_IDS.KM4);
         setProgress(70, '[KM4_LOADED]');
 
-        // Kiểm tra tồn tại firmware hiện có
+        // Kiểm tra tồn tại VNK1, VNK2, VNK3 (dùng HEAD request)
         const appPromises = [
-            checkFirmwareExists(FIRMWARE_IDS.BW1),
-            checkFirmwareExists(FIRMWARE_IDS.ESP2)
+            checkFirmwareExists(FIRMWARE_IDS.VNK1),
+            checkFirmwareExists(FIRMWARE_IDS.VNK2),
+            checkFirmwareExists(FIRMWARE_IDS.VNK3)
         ];
 
         const results = await Promise.allSettled(appPromises);
@@ -1118,9 +726,7 @@ async function loadSystemFirmware() {
 
 async function checkFirmwareExists(id) {
     try {
-        const path = FIRMWARE_PATHS[id];
-        if (!path) return false;
-        const response = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+        const response = await fetch(`${FIRMWARE_ENDPOINT}?id=${id}`, { method: 'HEAD' });
         return response.ok;
     } catch {
         return false;
@@ -1130,19 +736,23 @@ async function checkFirmwareExists(id) {
 async function loadApplicationFirmware(type) {
     let url, name;
     switch(type) {
-        case 'BW1':
-            url = FIRMWARE_IDS.BW1;
-            name = 'BW1';
+        case 'VNK1':
+            url = FIRMWARE_IDS.VNK1;
+            name = 'VNK1';
             break;
-        case 'ESP2':
-            url = FIRMWARE_IDS.ESP2;
-            name = 'ESP2';
+        case 'VNK2':
+            url = FIRMWARE_IDS.VNK2;
+            name = 'VNK2';
+            break;
+        case 'VNK3':
+            url = FIRMWARE_IDS.VNK3;
+            name = 'VNK3_FIRMWARE_BW16';
             break;
         default:
             throw new Error(`Unknown firmware type: ${type}`);
     }
 
-    const id = FIRMWARE_IDS[type];
+    const id = FIRMWARE_IDS[type]; // id như 'vnk1', 'vnk2', ...
     if (!id) throw new Error(`Unknown firmware type: ${type}`);
 
     const statusElement = document.getElementById('firmwareStatus');
@@ -1153,7 +763,7 @@ async function loadApplicationFirmware(type) {
     try {
         log('SYSTEM', `Loading ${name}...`);
 
-        // Tải firmware từ file local theo id bw1/esp2
+        // Tải firmware qua endpoint bảo vệ (get_firmware.php?id=vnk1)
         const data = await loadFirmwareById(id);
 
         // Cập nhật UI khi tải thành công
@@ -1226,65 +836,68 @@ function copyLog() {
     });
 }
 
-async function selectFirmware(type) {
+async function selectFirmware(type, evt) {
     document.querySelectorAll('.firmware-option').forEach(el => {
         el.classList.remove('active');
     });
 
-    const selectedEl = event?.currentTarget || document.querySelector(`.firmware-option[onclick*="${type}"]`);
+    const selectedEl = evt?.currentTarget || document.querySelector(`.firmware-option[data-fw="${type}"]`);
     if (selectedEl) selectedEl.classList.add('active');
 
-    selectedFirmwareType = type;
-    selectedFirmware = null;
+    selectedFirmwareType = 'prebuilt';
+    selectedFirmware = type;
 
     const infoDiv = document.getElementById('selectedFirmwareInfo');
     const fwName = document.getElementById('fwName');
     const fwDetails = document.getElementById('fwDetails');
     const fwSize = document.getElementById('fwSize');
-    const espInstallerContainer = document.getElementById('espInstallerContainer');
+    const esp32Panel = document.getElementById('esp32HubPanel');
+    const isEsp32Hub = type === 'VNK3';
+    if (esp32Panel) esp32Panel.classList.toggle('hidden', !isEsp32Hub);
 
     let name = '', details = '';
-
     switch(type) {
-        case 'BW1':
-            name = '[BW1]';
-            details = 'BW16 • AmebaD target';
+        case 'VNK1':
+            name = '[VNK1]';
+            details = 'RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED';
             break;
-        case 'ESP2':
-            name = '[ESP2]';
-            details = 'Beechat • ESP32 via WebTools';
+        case 'VNK2':
+            name = '[VNK2]';
+            details = 'RTL8720DN BW16-KIT + VNKPRO ';
             break;
-        default:
-            name = `[${type}]`;
-            details = 'Custom target';
+        case 'VNK3':
+            name = 'ESP32 Firmware Hub';
+            details = 'ESP32 · Flash qua USB · Lấy MAC';
             break;
     }
 
-    fwName.textContent = name;
-    fwDetails.textContent = details;
-    infoDiv.classList.remove('hidden');
+    if (infoDiv) infoDiv.classList.remove('hidden');
+    if (fwName) fwName.textContent = name;
+    if (fwDetails) fwDetails.textContent = details;
+    if (fwSize) fwSize.textContent = 'LOADING...';
 
-    if (type === 'ESP2') {
-        fwSize.textContent = 'ESP32 HUB';
-        if (espInstallerContainer) espInstallerContainer.classList.remove('hidden');
-        statusOperation.textContent = '[READY]';
-        log('SELECTION', `Selected: ${name} (${details})`);
-        return;
-    }
-
-    if (espInstallerContainer) espInstallerContainer.classList.add('hidden');
-
-    fwSize.textContent = 'LOADING...';
     log('SELECTION', `Selected: ${name}`);
+
+    if (isEsp32Hub && esp32Panel) {
+        const esp32Console = document.getElementById('esp32Console');
+        const esp32Tag = document.getElementById('esp32HubTag');
+        const esp32Bar = document.getElementById('esp32ProgressBar');
+        if (esp32Console) esp32Console.textContent = 'ESP32 Firmware Hub đã sẵn sàng. Cắm board ESP32 vào USB, bấm "Lấy MAC" hoặc "Flash qua USB".';
+        if (esp32Tag) {
+            esp32Tag.textContent = 'Sẵn sàng nạp';
+            esp32Tag.className = 'esp32-badge waiting';
+        }
+        if (esp32Bar) esp32Bar.style.width = '0%';
+    }
 
     try {
         const firmwareData = await loadApplicationFirmware(type);
-        fwSize.textContent = `${(firmwareData.length / 1024).toFixed(1)}KB`;
+        if (fwSize) fwSize.textContent = `${(firmwareData.length / 1024).toFixed(1)}KB`;
         selectedFirmware = firmwareData;
         statusOperation.textContent = '[READY]';
     } catch (error) {
         selectedFirmware = null;
-        fwSize.textContent = 'FAILED';
+        if (fwSize) fwSize.textContent = 'FAILED';
         log('ERROR', `Load failed: ${error.message}`);
     }
 }
@@ -1720,88 +1333,7 @@ async function runOperation(mode) {
 // EVENT LISTENERS
 // ============================================================================
 
-async function installEsp32Firmware() {
-    const container = document.getElementById('espInstallerContainer');
-    const stage = container?.querySelector('.esp-installer-stage');
-    if (!container || !stage) return;
-
-    stage.innerHTML = `
-        <div class="esp-hub-shell">
-            <div class="esp-hub-topline">
-                <span class="esp-hub-label">Device</span>
-                <span class="esp-hub-pill">ESP32-S3</span>
-            </div>
-            <div class="esp-hub-grid">
-                <div class="esp-hub-card">
-                    <span>Board</span>
-                    <strong>Beechat</strong>
-                </div>
-                <div class="esp-hub-card success">
-                    <span>Status</span>
-                    <strong>READY</strong>
-                </div>
-                <div class="esp-hub-card">
-                    <span>Target</span>
-                    <strong>ESP32</strong>
-                </div>
-                <div class="esp-hub-card success">
-                    <span>Mode</span>
-                    <strong>BOOT</strong>
-                </div>
-            </div>
-            <div class="esp-upload-box">
-                <div class="esp-upload-head">
-                    <span>Firmware image</span>
-                    <span class="esp-upload-badge">bin</span>
-                </div>
-                <div class="esp-upload-actions">
-                    <button class="esp-upload-btn primary">Upload .bin</button>
-                    <button class="esp-upload-btn secondary">Verify</button>
-                </div>
-            </div>
-            <div class="esp-install-summary">
-                <div>
-                    <small>Memory</small>
-                    <strong>0x10000</strong>
-                </div>
-                <div>
-                    <small>Flash</small>
-                    <strong>4 MB</strong>
-                </div>
-                <div>
-                    <small>Build</small>
-                    <strong>v2.1</strong>
-                </div>
-            </div>
-        </div>
-    `;
-
-    container.classList.remove('hidden');
-    connectBtn.classList.remove('primary-btn');
-    connectBtn.classList.add('bg-green-600');
-    connectBtn.innerHTML = '<i class="fas fa-microchip mr-1"></i> ESP32 HUB';
-    connectionStatus.textContent = '[ESP32]';
-    statusConnection.textContent = '[HUB_READY]';
-    log('SYSTEM', 'ESP32 Firmware Hub interface loaded');
-}
-
 connectBtn.addEventListener('click', async () => {
-    if (selectedFirmwareType === 'ESP2') {
-        const shell = document.getElementById('espInstallerContainer');
-        if (shell && !shell.classList.contains('hidden')) {
-            shell.classList.add('hidden');
-            connectBtn.classList.remove('bg-green-600');
-            connectBtn.classList.add('primary-btn');
-            connectBtn.innerHTML = '<i class="fas fa-plug mr-1"></i> CONNECT';
-            connectionStatus.textContent = '[DISCONNECTED]';
-            statusConnection.textContent = '[IDLE]';
-            log('SYSTEM', 'ESP32 Firmware Hub closed');
-            return;
-        }
-        await installEsp32Firmware();
-        return;
-    }
-
     if (port) {
         keepReading = false;
         if (reader) await reader.cancel();
@@ -1839,6 +1371,185 @@ connectBtn.addEventListener('click', async () => {
 
 flashBtn.addEventListener('click', () => runOperation('FLASH'));
 eraseBtn.addEventListener('click', () => runOperation('ERASE'));
+
+const esp32Console = document.getElementById('esp32Console');
+const esp32Tag = document.getElementById('esp32HubTag');
+const esp32ProgressBar = document.getElementById('esp32ProgressBar');
+const esp32CloseBtn = document.getElementById('esp32CloseBtn');
+const esp32MacBtn = document.getElementById('esp32MacBtn');
+const esp32FlashBtn = document.getElementById('esp32FlashBtn');
+
+let esp32Port = null;
+let esp32Reader = null;
+let esp32Writer = null;
+let esp32Reading = false;
+let esp32DetectedMac = null;
+
+function appendEsp32Console(message) {
+    if (!esp32Console) return;
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    esp32Console.textContent += `\n[${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}] ${message}`;
+    esp32Console.scrollTop = esp32Console.scrollHeight;
+}
+
+function setEsp32Progress(percent) {
+    if (!esp32ProgressBar) return;
+    esp32ProgressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+}
+
+async function openEsp32Port() {
+    if (!('serial' in navigator)) {
+        throw new Error('Web Serial không hỗ trợ trên trình duyệt này. Hãy dùng Chrome/Edge.');
+    }
+    if (esp32Port) return esp32Port;
+    esp32Port = await navigator.serial.requestPort();
+    await esp32Port.open({ baudRate: 115200 });
+    esp32Writer = esp32Port.writable?.getWriter();
+    return esp32Port;
+}
+
+function normalizeMac(raw) {
+    const digits = String(raw || '').replace(/^0x/i, '').replace(/[^0-9A-Fa-f]/g, '');
+    if (digits.length !== 12) return null;
+    const parts = [];
+    for (let i = 0; i < digits.length; i += 2) parts.push(digits.slice(i, i + 2));
+    return parts.join(':').toUpperCase();
+}
+
+function extractMacCandidates(text) {
+    const matches = [];
+    const regex = /(?:MAC|mac|wifi|WIFI|STA|AP)[^0-9A-Fa-f]*(?:0x)?([0-9A-Fa-f]{12}|[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5})/gi;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        const candidate = normalizeMac(match[1]);
+        if (candidate) matches.push(candidate);
+    }
+    return [...new Set(matches)];
+}
+
+async function readEsp32Mac() {
+    try {
+        const port = await openEsp32Port();
+        if (!port.readable) {
+            appendEsp32Console('Thiết bị không có stream đọc. Hãy kiểm tra lại cổng USB.');
+            return;
+        }
+        esp32Tag.textContent = 'Đang đọc MAC';
+        esp32Tag.className = 'esp32-badge ready';
+        appendEsp32Console('Kết nối thành công. Đang nghe dữ liệu MAC từ board ESP32...');
+
+        esp32Reading = true;
+        const decoder = new TextDecoder();
+        esp32Reader = port.readable.getReader();
+        while (esp32Reading) {
+            const { value, done } = await esp32Reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            const macs = extractMacCandidates(chunk);
+            if (macs.length) {
+                esp32DetectedMac = macs[0];
+                appendEsp32Console(`MAC DETECTED: ${esp32DetectedMac}`);
+                esp32Tag.textContent = 'MAC đã phát hiện';
+                esp32Tag.className = 'esp32-badge ready';
+                esp32Reading = false;
+                break;
+            }
+            appendEsp32Console(chunk.trim());
+        }
+        if (esp32Reader) {
+            esp32Reader.releaseLock();
+            esp32Reader = null;
+        }
+    } catch (error) {
+        appendEsp32Console(`LỖI LẤY MAC: ${error.message}`);
+        if (esp32Tag) {
+            esp32Tag.textContent = 'Không đọc được MAC';
+            esp32Tag.className = 'esp32-badge waiting';
+        }
+    }
+}
+
+async function flashEsp32Firmware() {
+    try {
+        const port = await openEsp32Port();
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.bin';
+        fileInput.onchange = async () => {
+            const file = fileInput.files?.[0];
+            if (!file) {
+                appendEsp32Console('Chưa chọn file firmware ESP32.');
+                return;
+            }
+
+            const buffer = await file.arrayBuffer();
+            const bytes = new Uint8Array(buffer);
+            const total = bytes.length;
+            appendEsp32Console(`Bắt đầu nạp ${file.name} (${(total / 1024).toFixed(1)} KB)`);
+            if (esp32Tag) {
+                esp32Tag.textContent = 'Đang nạp firmware';
+                esp32Tag.className = 'esp32-badge ready';
+            }
+
+            if (!port.writable) {
+                throw new Error('Cổng USB không khả dụng để nạp firmware.');
+            }
+
+            const writer = port.writable.getWriter();
+            const chunkSize = 64;
+            try {
+                for (let i = 0; i < bytes.length; i += chunkSize) {
+                    const chunk = bytes.slice(i, i + chunkSize);
+                    await writer.write(chunk);
+                    setEsp32Progress((i / total) * 100);
+                    appendEsp32Console(`Nạp chunk ${Math.min(i + chunkSize, total)}/${total} bytes`);
+                    await new Promise(resolve => setTimeout(resolve, 20));
+                }
+                setEsp32Progress(100);
+                appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
+                if (esp32Tag) {
+                    esp32Tag.textContent = 'Nạp thành công';
+                    esp32Tag.className = 'esp32-badge ready';
+                }
+            } finally {
+                writer.releaseLock();
+            }
+        };
+        fileInput.click();
+    } catch (error) {
+        appendEsp32Console(`LỖI NẠP: ${error.message}`);
+        if (esp32Tag) {
+            esp32Tag.textContent = 'Nạp thất bại';
+            esp32Tag.className = 'esp32-badge waiting';
+        }
+    }
+}
+
+if (esp32CloseBtn) {
+    esp32CloseBtn.addEventListener('click', () => {
+        esp32Reading = false;
+        if (esp32Reader) {
+            esp32Reader.cancel();
+            esp32Reader = null;
+        }
+        if (esp32Port && esp32Port.readable) {
+            esp32Port.close();
+        }
+        esp32Port = null;
+        esp32Writer = null;
+        const panel = document.getElementById('esp32HubPanel');
+        if (panel) panel.classList.add('hidden');
+    });
+}
+
+if (esp32MacBtn) {
+    esp32MacBtn.addEventListener('click', readEsp32Mac);
+}
+
+if (esp32FlashBtn) {
+    esp32FlashBtn.addEventListener('click', flashEsp32Firmware);
+}
 
 // ============================================================================
 // INITIALIZATION
