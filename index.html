@@ -220,6 +220,20 @@
             align-items: center;
             flex-wrap: wrap;
         }
+        .esp32-erase {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            padding: 6px 8px;
+            font-size: 9px;
+            color: #dff9ff;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+        }
+        .esp32-erase input {
+            accent-color: #00ffff;
+        }
         .esp32-btn {
             background: linear-gradient(135deg, #001a33 0%, #00ffff 50%, #ff00ff 100%);
             color: #000;
@@ -469,6 +483,10 @@
                         <div class="esp32-actions">
                             <button id="esp32FlashBtn" class="esp32-btn" type="button">⚡ Flash qua USB</button>
                             <button id="esp32MacBtn" class="esp32-btn ghost" type="button">📡 Lấy MAC</button>
+                            <label class="esp32-erase" for="esp32EraseToggle">
+                                <input id="esp32EraseToggle" type="checkbox" checked>
+                                <span>Erase trước khi nạp</span>
+                            </label>
                             <button id="esp32CloseBtn" class="esp32-btn close" type="button" title="Đóng">✕</button>
                         </div>
                         <div class="esp32-progress"><div id="esp32ProgressBar" class="esp32-progress-bar"></div></div>
@@ -1377,12 +1395,14 @@ const esp32ProgressBar = document.getElementById('esp32ProgressBar');
 const esp32CloseBtn = document.getElementById('esp32CloseBtn');
 const esp32MacBtn = document.getElementById('esp32MacBtn');
 const esp32FlashBtn = document.getElementById('esp32FlashBtn');
+const esp32EraseToggle = document.getElementById('esp32EraseToggle');
 
 let esp32Port = null;
 let esp32Reader = null;
 let esp32Writer = null;
 let esp32Reading = false;
 let esp32DetectedMac = null;
+let esp32FlashBusy = false;
 
 function appendEsp32Console(message) {
     if (!esp32Console) return;
@@ -1468,8 +1488,10 @@ async function readEsp32Mac() {
             appendEsp32Console('Thiết bị không có stream đọc. Hãy kiểm tra lại cổng USB.');
             return;
         }
-        esp32Tag.textContent = 'Đang đọc MAC';
-        esp32Tag.className = 'esp32-badge ready';
+        if (esp32Tag) {
+            esp32Tag.textContent = 'Đang đọc MAC';
+            esp32Tag.className = 'esp32-badge ready';
+        }
         appendEsp32Console('Kết nối thành công. Đang nghe dữ liệu MAC từ board ESP32...');
 
         esp32Reading = true;
@@ -1483,12 +1505,15 @@ async function readEsp32Mac() {
             if (macs.length) {
                 esp32DetectedMac = macs[0];
                 appendEsp32Console(`MAC DETECTED: ${esp32DetectedMac}`);
-                esp32Tag.textContent = 'MAC đã phát hiện';
-                esp32Tag.className = 'esp32-badge ready';
+                if (esp32Tag) {
+                    esp32Tag.textContent = 'MAC đã phát hiện';
+                    esp32Tag.className = 'esp32-badge ready';
+                }
                 esp32Reading = false;
                 break;
             }
-            appendEsp32Console(chunk.trim());
+            const trimmed = chunk.trim();
+            if (trimmed) appendEsp32Console(trimmed);
         }
         releaseEsp32Reader();
     } catch (error) {
@@ -1500,33 +1525,67 @@ async function readEsp32Mac() {
     }
 }
 
+async function ensureEsp32Flasher() {
+    if (!window.__esp32EsptoolModule) {
+        const mod = await import('https://unpkg.com/esptool-js/bundle.js');
+        window.__esp32EsptoolModule = mod;
+    }
+    return window.__esp32EsptoolModule;
+}
+
 async function eraseEsp32Flash() {
-    const port = await openEsp32Port();
-    if (!port.writable) {
-        throw new Error('Cổng USB không khả dụng để xoá flash trước khi nạp.');
+    const eraseBeforeFlash = esp32EraseToggle ? esp32EraseToggle.checked : true;
+    if (!eraseBeforeFlash) {
+        appendEsp32Console('FLASH ERASE: bỏ qua xoá flash theo tùy chọn người dùng.');
+        setEsp32Progress(10);
+        return;
     }
 
-    const writer = getEsp32Writer();
-    const eraseCommand = new Uint8Array([0x45, 0x52, 0x41, 0x53, 0x45, 0x00, 0x00, 0x00]);
-
-    appendEsp32Console('FLASH ERASE: bắt đầu xoá vùng flash trước khi nạp...');
+    appendEsp32Console('FLASH ERASE: bắt đầu xoá toàn bộ flash trước khi nạp...');
     if (esp32Tag) {
         esp32Tag.textContent = 'Đang xoá flash';
         esp32Tag.className = 'esp32-badge waiting';
     }
     setEsp32Progress(10);
 
+    const port = await openEsp32Port();
+    const { ESPLoader, Transport } = await ensureEsp32Flasher();
+    const transport = new Transport(port, true);
+    const esploader = new ESPLoader({
+        transport,
+        baudrate: 115200,
+        terminal: {
+            write(data) { appendEsp32Console(String(data).trim()); },
+            writeLine(data) { appendEsp32Console(String(data).trim()); }
+        },
+        debugLogging: false
+    });
+
     try {
-        await writer.write(eraseCommand);
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await esploader.main();
+        await esploader.writeFlash({
+            fileArray: [{ data: new Uint8Array([0x00]), address: 0x0000 }],
+            flashMode: 'keep',
+            flashFreq: 'keep',
+            flashSize: 'keep',
+            eraseAll: true,
+            compress: true,
+            reportProgress: () => {}
+        });
         appendEsp32Console('FLASH ERASE: xoá flash hoàn tất. Tiếp tục quá trình nạp firmware.');
         setEsp32Progress(15);
     } finally {
-        releaseEsp32Writer();
+        try { await transport.disconnect(); } catch (e) {}
     }
 }
 
 async function flashEsp32Firmware() {
+    if (esp32FlashBusy) {
+        appendEsp32Console('Flash đang chạy, vui lòng chờ quá trình hoàn tất.');
+        return;
+    }
+
+    esp32FlashBusy = true;
     try {
         const port = await openEsp32Port();
 
@@ -1542,7 +1601,13 @@ async function flashEsp32Firmware() {
             appendEsp32Console(`Tải xong: ${(bytes.length / 1024).toFixed(1)} KB`);
         }
 
-        await eraseEsp32Flash();
+        const eraseBeforeFlash = esp32EraseToggle ? esp32EraseToggle.checked : true;
+        if (eraseBeforeFlash) {
+            await eraseEsp32Flash();
+        } else {
+            setEsp32Progress(15);
+            appendEsp32Console('FLASH: bỏ qua xoá flash theo lựa chọn. Bắt đầu ghi firmware.');
+        }
 
         if (esp32Tag) {
             esp32Tag.textContent = 'Đang nạp firmware';
@@ -1553,33 +1618,57 @@ async function flashEsp32Firmware() {
             throw new Error('Cổng USB không khả dụng để nạp firmware.');
         }
 
-        const writer = getEsp32Writer();
-        const chunkSize = 4096;
-        const total = bytes.length;
-        try {
-            for (let i = 0; i < total; i += chunkSize) {
-                const chunk = bytes.slice(i, i + chunkSize);
-                await writer.write(chunk);
-                const progress = (Math.min(i + chunkSize, total) / total) * 100;
-                setEsp32Progress(progress);
-                if (i === 0 || (Math.min(i + chunkSize, total) % 65536 === 0) || i + chunkSize >= total) {
-                    appendEsp32Console(`Nạp chunk ${Math.min(i + chunkSize, total)}/${total} bytes`);
-                }
+        const { ESPLoader, Transport } = await ensureEsp32Flasher();
+        const transport = new Transport(port, true);
+        const esploader = new ESPLoader({
+            transport,
+            baudrate: 115200,
+            terminal: {
+                write(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); },
+                writeLine(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); }
+            },
+            debugLogging: false
+        });
+
+        appendEsp32Console('Kết nối ESP32 và nhận dạng chip...');
+        const chipName = await esploader.main();
+        appendEsp32Console(`Chip nhận dạng: ${chipName || 'ESP32'}`);
+        setEsp32Progress(30);
+
+        await esploader.writeFlash({
+            fileArray: [{ data: bytes, address: 0x1000 }],
+            flashMode: 'keep',
+            flashFreq: 'keep',
+            flashSize: 'keep',
+            eraseAll: eraseBeforeFlash,
+            compress: true,
+            reportProgress: (fileIndex, written, total) => {
+                if (!total || total <= 0) return;
+                const raw = (written / total) * 70;
+                setEsp32Progress(30 + raw);
             }
-            setEsp32Progress(100);
-            appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
-            if (esp32Tag) {
-                esp32Tag.textContent = 'Nạp thành công';
-                esp32Tag.className = 'esp32-badge ready';
-            }
-        } finally {
-            releaseEsp32Writer();
+        });
+
+        setEsp32Progress(100);
+        appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
+        if (esp32Tag) {
+            esp32Tag.textContent = 'Nạp thành công';
+            esp32Tag.className = 'esp32-badge ready';
         }
+        try { await esploader.after('hard_reset'); } catch (e) {}
     } catch (error) {
         appendEsp32Console(`LỖI NẠP: ${error.message}`);
         if (esp32Tag) {
             esp32Tag.textContent = 'Nạp thất bại';
             esp32Tag.className = 'esp32-badge waiting';
+        }
+    } finally {
+        esp32FlashBusy = false;
+        setEsp32Progress(100);
+        releaseEsp32Writer();
+        if (esp32Port) {
+            try { await esp32Port.close(); } catch (e) {}
+            esp32Port = null;
         }
     }
 }
