@@ -1555,8 +1555,9 @@ async function eraseEsp32Flash() {
         transport,
         baudrate: 115200,
         terminal: {
-            write(data) { appendEsp32Console(String(data).trim()); },
-            writeLine(data) { appendEsp32Console(String(data).trim()); }
+            clean() {},
+            write(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); },
+            writeLine(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); }
         },
         debugLogging: false
     });
@@ -1624,6 +1625,7 @@ async function flashEsp32Firmware() {
             transport,
             baudrate: 115200,
             terminal: {
+                clean() {},
                 write(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); },
                 writeLine(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); }
             },
