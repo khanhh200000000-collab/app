@@ -78,14 +78,15 @@
             --esp-web-tools-button-color: #00f5ff;
             --esp-web-tools-button-text-color: #00131a;
             --esp-web-tools-button-border-radius: 0px;
-            --esp-web-tools-button-padding: 0.95rem 1.4rem;
-            --esp-web-tools-button-font-size: 0.78rem;
+            --esp-web-tools-button-padding: 0.7rem 1rem;
+            --esp-web-tools-button-font-size: 0.72rem;
             --esp-web-tools-button-font-weight: 800;
             --esp-web-tools-button-box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.25), 0 0 18px rgba(0, 255, 255, 0.35), 0 0 22px rgba(255, 0, 255, 0.22);
             --esp-web-tools-button-border-color: rgba(0, 255, 255, 0.9);
             --esp-web-tools-button-background-color: linear-gradient(135deg, #00ffff 0%, #7afcff 30%, #00d4ff 50%, #ff4df7 100%);
-            width: 100%;
-            max-width: 300px;
+            width: auto;
+            min-width: 190px;
+            max-width: 220px;
             display: inline-block;
             filter: saturate(1.2);
         }
@@ -97,10 +98,12 @@
             color: #00131a !important;
             font-family: 'Source Code Pro', monospace !important;
             text-transform: uppercase !important;
-            letter-spacing: 1.5px !important;
+            letter-spacing: 1.2px !important;
             font-weight: 800 !important;
             line-height: 1.2 !important;
-            padding: 0.95rem 1.4rem !important;
+            padding: 0.7rem 1rem !important;
+            min-width: 190px !important;
+            width: fit-content !important;
             transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
         }
         esp-web-install-button::part(button):hover {
@@ -112,6 +115,28 @@
             display: flex;
             justify-content: flex-start;
             margin-top: 12px;
+        }
+        .install-button-shell {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.35rem 0.55rem 0.35rem 0.45rem;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.22), rgba(255, 0, 255, 0.18));
+            border: 2px solid rgba(0, 255, 255, 0.9);
+            box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.12), 0 0 18px rgba(0, 255, 255, 0.32), 0 0 18px rgba(255, 0, 255, 0.22);
+        }
+        .install-button-shell i {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            font-size: 1rem;
+            color: #00131a;
+            background: linear-gradient(135deg, #00ffff, #ff4df7);
+            border: 2px solid rgba(0, 255, 255, 0.9);
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+            text-shadow: none;
         }
         .firmware-option {
             transition: all 0.2s ease;
@@ -394,7 +419,10 @@
                     </div>
 
                     <div id="espInstallWrap" class="esp-button-wrap hidden">
-                        <esp-web-install-button id="espInstallButton" manifest="./firmware/ESP32/manifest.json"></esp-web-install-button>
+                        <div class="install-button-shell">
+                            <i class="fas fa-download"></i>
+                            <esp-web-install-button id="espInstallButton" manifest="./firmware/ESP32/manifest.json"></esp-web-install-button>
+                        </div>
                     </div>
                     <div id="espInstallError" class="hidden mt-3 rounded-none border border-red-500/60 bg-red-500/10 p-2 text-xs text-red-200">
                         ESP32 firmware chưa sẵn sàng để cài đặt. Vui lòng thêm file firmware vào thư mục <strong>firmware/ESP32</strong> và đảm bảo manifest trỏ đúng tới file .bin.
@@ -781,15 +809,21 @@ async function applyEspInstallButtonStyle() {
 
         const shadowButton = espInstallButton.shadowRoot?.querySelector('button');
         if (shadowButton) {
+            shadowButton.innerHTML = '<i class="fas fa-plug mr-2"></i> INSTALL';
             shadowButton.style.borderRadius = '0';
             shadowButton.style.border = '2px solid rgba(0, 255, 255, 0.9)';
             shadowButton.style.background = 'linear-gradient(135deg, #00ffff 0%, #7afcff 30%, #00d4ff 50%, #ff4df7 100%)';
             shadowButton.style.color = '#00131a';
             shadowButton.style.fontFamily = '"Source Code Pro", monospace';
             shadowButton.style.textTransform = 'uppercase';
-            shadowButton.style.letterSpacing = '1.5px';
+            shadowButton.style.letterSpacing = '1.2px';
             shadowButton.style.fontWeight = '800';
-            shadowButton.style.padding = '0.95rem 1.4rem';
+            shadowButton.style.padding = '0.7rem 1rem';
+            shadowButton.style.minWidth = '190px';
+            shadowButton.style.width = 'fit-content';
+            shadowButton.style.display = 'inline-flex';
+            shadowButton.style.alignItems = 'center';
+            shadowButton.style.justifyContent = 'center';
             shadowButton.style.boxShadow = '0 0 0 2px rgba(0, 255, 255, 0.12), 0 0 18px rgba(0, 255, 255, 0.32), 0 0 18px rgba(255, 0, 255, 0.22)';
             shadowButton.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease';
         }
