@@ -7,7 +7,7 @@
       "chipFamily": "ESP32",
       "parts": [
         {
-          "path": "beechat.bin",
+          "path": "./firmware/beechat.bin",
           "offset": 0
         }
       ]
