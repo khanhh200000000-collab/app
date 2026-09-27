@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VNKDIY Flasher</title>
+    <title>BEERUSS DIY</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,15 +14,18 @@
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #1a0033 0%, #001a33 100%);
+            background:
+                radial-gradient(circle at top left, rgba(0, 255, 255, 0.18), transparent 28%),
+                radial-gradient(circle at top right, rgba(255, 0, 255, 0.18), transparent 32%),
+                linear-gradient(135deg, #1a0033 0%, #001a33 100%);
             font-family: 'Source Code Pro', monospace;
         }
         .card {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff) 1;
-            border-radius: 0;
+            background: rgba(7, 10, 20, 0.76);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,255,255,0.32);
+            border-radius: 18px;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.04), inset 0 0 18px rgba(0,255,255,0.06);
         }
         .hacker-console {
             background: #0a0a12;
@@ -48,32 +51,33 @@
         }
         .primary-btn {
             background: linear-gradient(135deg, #001a33 0%, #00ffff 50%, #ff00ff 100%);
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            border: 2px solid rgba(255,255,255,0.25);
             color: #000;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             transition: all 0.3s ease;
+            box-shadow: 0 0 12px rgba(0,255,255,0.18), 0 0 20px rgba(255,0,255,0.12);
         }
         .primary-btn:hover {
             background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.5);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 18px rgba(0, 255, 255, 0.65), 0 0 28px rgba(255, 0, 255, 0.5);
         }
         .secondary-btn {
             background: linear-gradient(135deg, #330033 0%, #003333 100%);
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #ff00ff, #00ffff) 1;
+            border: 2px solid rgba(255,255,255,0.18);
             color: #00ffff;
             font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            transition: all 0.25s ease;
         }
         .secondary-btn:hover {
             background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
             color: #000;
             box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+            transform: translateY(-1px);
         }
         .firmware-option {
             transition: all 0.2s ease;
@@ -94,6 +98,136 @@
             background: rgba(0, 255, 255, 0.15);
             box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.2);
         }
+        .topbar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.9rem;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, rgba(0,255,255,0.25), rgba(255,0,255,0.9), rgba(0,255,255,0.25)) 1;
+            padding-bottom: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .topbar::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 -8px 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.7), rgba(255,0,255,0.7), transparent);
+            filter: blur(1px);
+        }
+        .brand-block {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.85rem;
+            margin-right: auto;
+        }
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.5rem 0.9rem 0.5rem 0.55rem;
+            border: 1px solid rgba(0,255,255,0.5);
+            border-radius: 18px;
+            background: rgba(8, 20, 30, 0.38);
+            box-shadow: 0 0 0 1px rgba(255,0,255,0.12), 0 0 18px rgba(0,255,255,0.1), inset 0 0 12px rgba(0,255,255,0.04);
+        }
+        .brand-wrap {
+            text-align: left;
+            position: relative;
+        }
+        .brand-wrap::before {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,255,255,0.18), rgba(255,0,255,0.12), transparent 70%);
+            filter: blur(10px);
+            pointer-events: none;
+        }
+        .brand-logo {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(5, 22, 34, 0.98), rgba(17, 27, 40, 0.88));
+            border: 1px solid rgba(0,255,255,0.52);
+            box-shadow: 0 0 18px rgba(0,255,255,0.18), inset 0 0 14px rgba(0,255,255,0.08);
+            padding: 0.4rem;
+            flex-shrink: 0;
+        }
+        .brand-logo svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: drop-shadow(0 0 8px rgba(0,255,255,0.28)) drop-shadow(0 0 10px rgba(255,0,255,0.2));
+        }
+        .brand-mark {
+            font-size: clamp(1.5rem, 3vw, 2.7rem);
+            line-height: 1.05;
+            letter-spacing: 0.12em;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ccfaff, #7af7ff 18%, #ff8efb 55%, #f9f2ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 22px rgba(0,255,255,0.38), 0 0 22px rgba(255,0,255,0.25);
+        }
+        .brand-sub {
+            font-size: 0.62rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(146, 213, 255, 0.8);
+            opacity: 0.9;
+            margin-top: 0.15rem;
+        }
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(7, 28, 42, 0.96), rgba(12, 42, 56, 0.9));
+            border: 1px solid rgba(0,255,255,0.50);
+            box-shadow: 0 0 20px rgba(0,255,255,0.18), inset 0 0 14px rgba(0,255,255,0.08), 0 8px 18px rgba(0,0,0,0.18);
+            color: #dffcff;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            margin-left: auto;
+        }
+        .status-chip:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 28px rgba(0,255,255,0.25), inset 0 0 18px rgba(0,255,255,0.10), 0 16px 28px rgba(0,0,0,0.2);
+        }
+        .status-chip::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #3ef9b2;
+            box-shadow: 0 0 12px rgba(62,249,178,0.95), 0 0 18px rgba(62,249,178,0.8);
+            animation: pulse 1.7s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.9); opacity: 1; }
+            50% { transform: scale(1.35); opacity: 0.72; }
+        }
         .hacker-header {
             background: linear-gradient(45deg, #00ffff, #ff00ff);
             -webkit-background-clip: text;
@@ -106,8 +240,6 @@
         .hacker-text {
             color: #00ffff;
             font-size: 10px;
-  
-  
             letter-spacing: 1px;
             text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
         }
@@ -278,18 +410,37 @@
 
 
     <div class="max-w-6xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-4 pb-2 gap-2 border-b-2" style="border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;">
-            <div>
-                <h1 class="hacker-header text-xl font-bold mb-0.5">
-                    <i class="fas fa-terminal mr-1"></i>VNKDIY Firmware Flasher
-                </h1>
-                <p class="hacker-text text-xs">[SYSTEM]Firmware Management for Realtek AmebaD (BW16/RTL8720)</p>
+        <header class="topbar mb-4">
+            <div class="brand-block">
+                <div class="brand-group">
+                    <div class="brand-logo" aria-label="Beeruss fox logo">
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="foxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#dffcff"/>
+                                    <stop offset="35%" stop-color="#7af7ff"/>
+                                    <stop offset="70%" stop-color="#ff8efb"/>
+                                    <stop offset="100%" stop-color="#fdf2ff"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M20 15 L12 25 L22 25 L18 36 L26 32 L32 44 L38 32 L46 36 L42 25 L52 25 L44 15 L38 20 L32 12 L26 20 Z" fill="url(#foxGrad)" opacity="0.96"/>
+                            <path d="M23 27 L32 20 L41 27 L38 37 L32 44 L26 37 Z" fill="#0b1020" opacity="0.82"/>
+                            <circle cx="27.5" cy="28.5" r="1.7" fill="#0a1120"/>
+                            <circle cx="36.5" cy="28.5" r="1.7" fill="#0a1120"/>
+                            <path d="M30 34 Q32 36 34 34" stroke="#cfeaff" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+                            <path d="M24 27 L18 20" stroke="#dffcff" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M40 27 L46 20" stroke="#dffcff" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="brand-wrap">
+                        <div class="brand-mark">BEERUSS</div>
+                        <div class="brand-sub">DIY</div>
+                    </div>
+                </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <button id="connectBtn" class="primary-btn text-black px-3 py-1.5 rounded-none text-sm font-semibold transition flex items-center whitespace-nowrap">
-                    <i class="fas fa-plug mr-1"></i> CONNECT
-                </button>
-            </div>
+            <button id="connectBtn" class="status-chip primary-btn flex items-center whitespace-nowrap">
+                <i class="fas fa-plug"></i> CONNECTED
+            </button>
         </header>
   
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -466,8 +617,8 @@
         </div>
     
         <footer class="mt-4 pt-2 border-t-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) text-center">
-            <p class="hacker-subtext text-xs">VNKDIY Firmware Flasher v1.1.0 | VNK Flash team v1 | [PRODEV-VNK]</p>
-            <p class="hacker-subtext text-xs mt-0.5 opacity-60">© 2025 Realtek AmebaD Platform</p>
+            <p class="hacker-subtext text-xs">BEERUSS DIY Firmware Lab | System Build v1.1.0 | [PRODEV-BEERUSS]</p>
+            <p class="hacker-subtext text-xs mt-0.5 opacity-60">© 2025 BEERUSS DIY Workspace</p>
         </footer>
     </div>
    
