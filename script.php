@@ -1,3 +1,4 @@
+<?php
 const avatarBtn = document.getElementById('userAvatar');
 const panel = document.getElementById('userInfoPanel');
 
@@ -919,3 +920,4 @@ document.addEventListener('DOMContentLoaded', function() {
     log('SYSTEM', 'AmebaD Flasher v2.1.0 initialized');
     loadSystemFirmware();
 });
+?>
