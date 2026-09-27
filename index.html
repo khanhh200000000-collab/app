@@ -1517,6 +1517,9 @@ async function installEsp32Firmware() {
     if (!container) return;
 
     if (loaderCard) loaderCard.classList.remove('hidden');
+    container.innerHTML = '';
+
+    const button = document.createElement('esp-web-install-button');
     button.setAttribute('manifest', 'firmware/ESP2/manifest.json');
     button.setAttribute('theme', 'dark');
     button.setAttribute('class', 'w-full');
