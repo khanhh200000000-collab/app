@@ -259,6 +259,152 @@
             padding: 4px;
             background: rgba(10, 20, 40, 0.5);
         }
+        .esp-loader-card {
+            position: relative;
+            overflow: hidden;
+            margin-top: 0.75rem;
+            padding: 1rem;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at top left, rgba(0, 255, 255, 0.12), transparent 28%),
+                radial-gradient(circle at top right, rgba(255, 0, 255, 0.12), transparent 35%),
+                linear-gradient(180deg, rgba(10, 18, 26, 0.98), rgba(12, 17, 23, 0.94));
+            border: 1px solid rgba(105, 240, 255, 0.45);
+            box-shadow: 0 0 22px rgba(105, 240, 255, 0.12), inset 0 0 18px rgba(255, 0, 255, 0.06);
+        }
+        .esp-loader-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 3.5s linear infinite;
+        }
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+        .esp-loader-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #dffcff;
+        }
+        .esp-loader-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+        }
+        .esp-loader-title .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #6bf7d2;
+            box-shadow: 0 0 10px rgba(107, 247, 210, 0.8), 0 0 16px rgba(107, 247, 210, 0.7);
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+        .esp-loader-badges {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.55rem;
+            border-radius: 999px;
+            border: 1px solid rgba(105, 240, 255, 0.45);
+            background: rgba(105, 240, 255, 0.08);
+            color: #b9f7ff;
+            font-weight: 700;
+        }
+        .esp-loader-main {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+        .esp-loader-icon {
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.14));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 1.4rem;
+            box-shadow: inset 0 0 18px rgba(0, 255, 255, 0.07);
+        }
+        .esp-loader-copy {
+            flex: 1;
+        }
+        .esp-loader-caption {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #dffcff;
+            margin-bottom: 0.22rem;
+        }
+        .esp-loader-sub {
+            font-size: 0.66rem;
+            color: #ff9ad2;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+        .esp-loader-progress {
+            margin-bottom: 0.8rem;
+        }
+        .esp-loader-bar {
+            position: relative;
+            width: 100%;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(105, 240, 255, 0.3);
+            overflow: hidden;
+        }
+        .esp-loader-bar span {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 62%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #00ffff 0%, #69f0ff 30%, #ff50d8 75%, #ff9ad2 100%);
+            box-shadow: 0 0 12px rgba(105, 240, 255, 0.7), 0 0 12px rgba(255, 80, 216, 0.5);
+            animation: loadingBar 2.2s ease-in-out infinite alternate;
+        }
+        @keyframes loadingBar {
+            0% { width: 26%; }
+            50% { width: 68%; }
+            100% { width: 86%; }
+        }
+        .esp-loader-steps {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #a2dce6;
+        }
+        .esp-loader-steps span {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            border: 1px solid rgba(105, 240, 255, 0.26);
+            background: rgba(105, 240, 255, 0.04);
+        }
+        .esp-loader-steps span.active {
+            color: #dffcff;
+            border-color: rgba(255, 90, 210, 0.48);
+            background: rgba(255, 90, 210, 0.08);
+            box-shadow: 0 0 12px rgba(255, 90, 210, 0.12);
+        }
         .progress-container {
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid rgba(0, 255, 255, 0.3);
@@ -506,6 +652,28 @@
                         </div>
                     </div>
 
+                    <div id="espLoaderCard" class="esp-loader-card hidden">
+                        <div class="esp-loader-top">
+                            <div class="esp-loader-title"><span class="dot"></span> ESP32 FLASHING</div>
+                            <div class="esp-loader-badges">WEBTOOLS</div>
+                        </div>
+                        <div class="esp-loader-main">
+                            <div class="esp-loader-icon"><i class="fas fa-microchip" style="color: #dffcff;"></i></div>
+                            <div class="esp-loader-copy">
+                                <div class="esp-loader-caption">Uploading firmware to ESP32</div>
+                                <div class="esp-loader-sub">Secure boot • serial transport • OTA</div>
+                            </div>
+                        </div>
+                        <div class="esp-loader-progress">
+                            <div class="esp-loader-bar"><span></span></div>
+                        </div>
+                        <div class="esp-loader-steps">
+                            <span class="active">Connect</span>
+                            <span>Erase</span>
+                            <span>Write</span>
+                            <span>Verify</span>
+                        </div>
+                    </div>
                     <div id="espInstallerContainer" class="mt-2 hidden"></div>
                 </div>
             
@@ -1345,10 +1513,10 @@ async function runOperation(mode) {
 
 async function installEsp32Firmware() {
     const container = document.getElementById('espInstallerContainer');
+    const loaderCard = document.getElementById('espLoaderCard');
     if (!container) return;
 
-    container.innerHTML = '';
-    const button = document.createElement('esp-web-install-button');
+    if (loaderCard) loaderCard.classList.remove('hidden');
     button.setAttribute('manifest', 'firmware/ESP2/manifest.json');
     button.setAttribute('theme', 'dark');
     button.setAttribute('class', 'w-full');
@@ -1366,6 +1534,8 @@ connectBtn.addEventListener('click', async () => {
     if (selectedFirmwareType === 'ESP2') {
         if (document.querySelector('esp-web-install-button')) {
             document.querySelector('esp-web-install-button').remove();
+            const loaderCard = document.getElementById('espLoaderCard');
+            if (loaderCard) loaderCard.classList.add('hidden');
             connectBtn.classList.remove('bg-green-600');
             connectBtn.classList.add('primary-btn');
             connectBtn.innerHTML = '<i class="fas fa-plug mr-1"></i> CONNECT';
