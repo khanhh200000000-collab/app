@@ -1526,17 +1526,17 @@ async function flashEsp32Firmware() {
         }
 
         const writer = getEsp32Writer();
-        const chunkSize = 64;
+        const chunkSize = 4096;
         const total = bytes.length;
         try {
             for (let i = 0; i < total; i += chunkSize) {
                 const chunk = bytes.slice(i, i + chunkSize);
                 await writer.write(chunk);
-                setEsp32Progress((i / total) * 100);
-                if (i % (chunkSize * 200) === 0 || i + chunkSize >= total) {
+                const progress = (Math.min(i + chunkSize, total) / total) * 100;
+                setEsp32Progress(progress);
+                if (i === 0 || (Math.min(i + chunkSize, total) % 65536 === 0) || i + chunkSize >= total) {
                     appendEsp32Console(`Nạp chunk ${Math.min(i + chunkSize, total)}/${total} bytes`);
                 }
-                await new Promise(resolve => setTimeout(resolve, 20));
             }
             setEsp32Progress(100);
             appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
