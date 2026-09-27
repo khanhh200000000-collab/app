@@ -1127,31 +1127,6 @@ function setProgress(percent, status) {
     if (status) progressText.textContent = `[${status}]`;
 }
 
-function showCustomFlashLoader(stepName = 'Connect') {
-    const loaderCard = document.getElementById('espLoaderCard');
-    if (!loaderCard) return;
-    loaderCard.classList.remove('hidden');
-
-    const steps = loaderCard.querySelectorAll('.esp-loader-steps span');
-    steps.forEach((step) => {
-        step.classList.toggle('active', step.textContent.trim().toLowerCase() === stepName.toLowerCase());
-    });
-}
-
-function updateCustomFlashStep(stepName) {
-    const loaderCard = document.getElementById('espLoaderCard');
-    if (!loaderCard) return;
-    const steps = loaderCard.querySelectorAll('.esp-loader-steps span');
-    steps.forEach((step) => {
-        step.classList.toggle('active', step.textContent.trim().toLowerCase() === stepName.toLowerCase());
-    });
-}
-
-function hideCustomFlashLoader() {
-    const loaderCard = document.getElementById('espLoaderCard');
-    if (loaderCard) loaderCard.classList.add('hidden');
-}
-
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -1334,7 +1309,6 @@ async function changeBaudRate(targetBaud) {
 
 async function runOperation(mode) {
     try {
-        showCustomFlashLoader('Connect');
         if (!port) { 
             log('ERROR', "[NO_DEVICE] Connect device first.");
             alert("[ERROR] Connect device first!"); 
@@ -1386,11 +1360,9 @@ async function runOperation(mode) {
         flashBtn.disabled = true;
         eraseBtn.disabled = true;
         statusOperation.textContent = mode === 'FLASH' ? '[FLASHING]' : '[ERASING]';
-        updateCustomFlashStep('Connect');
         
         setProgress(5, "[INIT_FLASH]");
         await resetToFlashMode();
-        updateCustomFlashStep('Erase');
         await flushBuffer(); 
 
         log('SYSTEM', "Handshaking...");
@@ -1403,7 +1375,6 @@ async function runOperation(mode) {
         if (targetBaud != 115200) await changeBaudRate(targetBaud);
 
         log('FLASH', "Loading flashloader...");
-        updateCustomFlashStep('Write');
         await writeBlock(RAM_LOADER_ADDR, loaderData, "[FLASHLOADER]", 10, 30, 1);
         
         log('SYSTEM', "Executing flashloader...");
@@ -1426,7 +1397,6 @@ async function runOperation(mode) {
         if (!await waitForSync(2)) throw new Error("[FLASHLOADER_FAIL]");
         
         if (mode === 'ERASE') {
-             updateCustomFlashStep('Erase');
              setProgress(50, "[ERASING...]");
              await sendCmd(new Uint8Array([0x26, 0x01, 0x01, 0x00]));
              
@@ -1492,7 +1462,6 @@ async function runOperation(mode) {
             }
 
             log('FLASH', '-' . repeat(40));
-            updateCustomFlashStep('Write');
             log('FLASH', "Phase 2: Programming");
             const writeStep = 30 / operations.length;
             
@@ -1507,7 +1476,6 @@ async function runOperation(mode) {
             log('SUCCESS', "All components programmed");
         }
 
-        updateCustomFlashStep('Verify');
         setProgress(100, "[DONE]");
         log('SYSTEM', '='.repeat(40));
         log('SUCCESS', `${mode} completed`);
@@ -1524,7 +1492,6 @@ async function runOperation(mode) {
         flashBtn.disabled = false;
         eraseBtn.disabled = false;
         statusSpeed.textContent = '115200';
-        hideCustomFlashLoader();
         
         if (port) {
             keepReading = false;
@@ -1549,10 +1516,8 @@ async function runOperation(mode) {
 
 async function installEsp32Firmware() {
     const container = document.getElementById('espInstallerContainer');
-    const loaderCard = document.getElementById('espLoaderCard');
     if (!container) return;
 
-    if (loaderCard) loaderCard.classList.remove('hidden');
     container.innerHTML = '';
 
     const button = document.createElement('esp-web-install-button');
@@ -1573,8 +1538,6 @@ connectBtn.addEventListener('click', async () => {
     if (selectedFirmwareType === 'ESP2') {
         if (document.querySelector('esp-web-install-button')) {
             document.querySelector('esp-web-install-button').remove();
-            const loaderCard = document.getElementById('espLoaderCard');
-            if (loaderCard) loaderCard.classList.add('hidden');
             connectBtn.classList.remove('bg-green-600');
             connectBtn.classList.add('primary-btn');
             connectBtn.innerHTML = '<i class="fas fa-plug mr-1"></i> CONNECT';
