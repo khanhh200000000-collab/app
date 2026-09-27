@@ -1403,6 +1403,7 @@ let esp32Writer = null;
 let esp32Reading = false;
 let esp32DetectedMac = null;
 let esp32FlashBusy = false;
+let esp32OpenPromise = null;
 
 function appendEsp32Console(message) {
     if (!esp32Console) return;
@@ -1443,12 +1444,13 @@ async function closeEsp32Port() {
     }
     if (esp32Port) {
         try {
-            if (esp32Port.opened) {
+            if (esp32Port.opened && typeof esp32Port.close === 'function') {
                 await esp32Port.close();
             }
         } catch (e) {}
         esp32Port = null;
     }
+    esp32OpenPromise = null;
 }
 
 async function openEsp32Port() {
@@ -1456,28 +1458,40 @@ async function openEsp32Port() {
         throw new Error('Web Serial không hỗ trợ trên trình duyệt này. Hãy dùng Chrome/Edge.');
     }
 
-    if (!esp32Port) {
-        esp32Port = await navigator.serial.requestPort();
+    if (!window.isSecureContext && window.location.protocol !== 'file:') {
+        appendEsp32Console('Lưu ý: Web Serial nên chạy qua http://localhost:8000 hoặc HTTPS để hoạt động ổn định.');
+    }
+
+    if (window.location.protocol === 'file:') {
+        appendEsp32Console('Lưu ý: mở trang qua http://localhost:8000 hoặc HTTPS, vì file:// có thể chặn Web Serial và load firmware.');
     }
 
     if (esp32Port && esp32Port.opened) {
         return esp32Port;
     }
 
-    if (esp32Port && esp32Port.open && typeof esp32Port.open === 'function') {
-        try {
-            await esp32Port.open({ baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' });
-            return esp32Port;
-        } catch (error) {
-            const message = error && error.message ? error.message : String(error);
-            if (/already open/i.test(message)) {
-                return esp32Port;
-            }
-            throw error;
-        }
+    if (esp32OpenPromise) {
+        return esp32OpenPromise;
     }
 
-    throw new Error('Không thể mở cổng USB ESP32. Hãy kiểm tra lại cáp và quyền truy cập Web Serial.');
+    esp32OpenPromise = (async () => {
+        if (!esp32Port) {
+            esp32Port = await navigator.serial.requestPort();
+        }
+
+        if (esp32Port && esp32Port.opened) {
+            return esp32Port;
+        }
+
+        // Không gọi port.open() ở đây: esptool.js Transport sẽ mở cổng đúng cách theo chuẩn.
+        return esp32Port;
+    })();
+
+    try {
+        return await esp32OpenPromise;
+    } finally {
+        esp32OpenPromise = null;
+    }
 }
 
 function getEsp32Writer() {
@@ -1609,6 +1623,7 @@ async function flashEsp32Firmware() {
     }
 
     esp32FlashBusy = true;
+    let esploader = null;
     try {
         const port = await openEsp32Port();
 
@@ -1632,13 +1647,13 @@ async function flashEsp32Firmware() {
             esp32Tag.className = 'esp32-badge ready';
         }
 
-        if (!port.writable) {
+        if (!port || !port.writable) {
             throw new Error('Cổng USB không khả dụng để nạp firmware.');
         }
 
         const { ESPLoader, Transport } = await ensureEsp32Flasher();
         const transport = new Transport(port, true);
-        const esploader = new ESPLoader({
+        esploader = new ESPLoader({
             transport,
             baudrate: 115200,
             terminal: createEsp32Terminal(),
@@ -1646,6 +1661,8 @@ async function flashEsp32Firmware() {
         });
 
         appendEsp32Console('Kết nối ESP32 và nhận dạng chip...');
+        appendEsp32Console('esptool.js');
+        appendEsp32Console(`Serial port WebSerial VendorID ${port.vendorId ? '0x' + port.vendorId.toString(16) : '0x0000'} ProductID ${port.productId ? '0x' + port.productId.toString(16) : '0x0000'}`);
         const chipName = await esploader.main();
         appendEsp32Console(`Chip nhận dạng: ${chipName || 'ESP32'}`);
         setEsp32Progress(30);
@@ -1672,7 +1689,8 @@ async function flashEsp32Firmware() {
         }
         try { await esploader.after('hard_reset'); } catch (e) {}
     } catch (error) {
-        appendEsp32Console(`LỖI NẠP: ${error.message}`);
+        const message = error && error.message ? error.message : String(error);
+        appendEsp32Console(`LỖI NẠP: ${message}`);
         if (esp32Tag) {
             esp32Tag.textContent = 'Nạp thất bại';
             esp32Tag.className = 'esp32-badge waiting';
@@ -1681,6 +1699,9 @@ async function flashEsp32Firmware() {
         esp32FlashBusy = false;
         setEsp32Progress(100);
         releaseEsp32Writer();
+        if (esploader && typeof esploader.transport?.disconnect === 'function') {
+            try { await esploader.transport.disconnect(); } catch (e) {}
+        }
         await closeEsp32Port();
     }
 }
