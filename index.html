@@ -1422,12 +1422,22 @@ function createEsp32Terminal() {
     return {
         clean() {},
         write(data) {
-            const text = String(data || '').trim();
-            if (text) appendEsp32Console(text);
+            const text = String(data || '');
+            if (!text) return;
+            const lines = text.split(/\r?\n/);
+            lines.forEach((line) => {
+                const clean = line.replace(/\r/g, '').trim();
+                if (clean) appendEsp32Console(`[ESP] ${clean}`);
+            });
         },
         writeLine(data) {
-            const text = String(data || '').trim();
-            if (text) appendEsp32Console(text);
+            const text = String(data || '');
+            if (!text) return;
+            const lines = text.split(/\r?\n/);
+            lines.forEach((line) => {
+                const clean = line.replace(/\r/g, '').trim();
+                if (clean) appendEsp32Console(`[ESP] ${clean}`);
+            });
         }
     };
 }
