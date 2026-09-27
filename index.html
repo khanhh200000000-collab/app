@@ -74,6 +74,21 @@
             color: #000;
             box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
         }
+        .tertiary-btn {
+            background: linear-gradient(135deg, #001a33 0%, #00ffae 50%, #00d4ff 100%);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #00ffae, #00d4ff) 1;
+            color: #00131a;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        .tertiary-btn:hover {
+            background: linear-gradient(135deg, #00ffae 0%, #00d4ff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 255, 174, 0.5), 0 0 20px rgba(0, 212, 255, 0.5);
+        }
         esp-web-install-button {
             --esp-web-tools-button-color: #00f5ff;
             --esp-web-tools-button-text-color: #00131a;
@@ -137,6 +152,77 @@
             border: 2px solid rgba(0, 255, 255, 0.9);
             box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
             text-shadow: none;
+        }
+        .device-detail-panel {
+            margin-top: 0.75rem;
+            background: rgba(0, 0, 0, 0.68);
+            border: 2px solid rgba(0, 255, 255, 0.45);
+            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
+            padding: 0.75rem;
+            box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.08), 0 0 18px rgba(0, 255, 255, 0.12);
+        }
+        .device-detail-content {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        .device-image-box {
+            background: rgba(12, 18, 30, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.35);
+            padding: 0.35rem;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .device-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid rgba(255, 0, 255, 0.4);
+            filter: saturate(1.2) contrast(1.08);
+        }
+        .device-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .device-specs table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(9, 12, 22, 0.75);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+        }
+        .device-specs th,
+        .device-specs td {
+            padding: 0.5rem 0.45rem;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            text-align: left;
+            vertical-align: top;
+            color: #dfeaf9;
+            font-size: 10px;
+        }
+        .device-specs th {
+            width: 38%;
+            color: #00ffff;
+            background: rgba(0, 255, 255, 0.08);
+            font-weight: 700;
+        }
+        .device-guide {
+            background: rgba(10, 20, 40, 0.7);
+            border: 1px solid rgba(255, 0, 255, 0.25);
+            padding: 0.55rem 0.65rem;
+            color: #d8f3ff;
+            font-size: 10px;
+            line-height: 1.55;
+        }
+        .device-guide ol {
+            margin: 0.25rem 0 0 1rem;
+            padding: 0;
+        }
+        .device-guide li + li {
+            margin-top: 0.2rem;
         }
         .firmware-option {
             transition: all 0.2s ease;
@@ -418,6 +504,26 @@
                         </div>
                     </div>
 
+                    <div id="deviceDetailPanel" class="device-detail-panel hidden">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h4 class="hacker-text text-xs font-bold">DEVICE_DETAIL</h4>
+                                <p class="hacker-subtext text-xs">[SPECIFICATION_AND_GUIDE]</p>
+                            </div>
+                        </div>
+                        <div class="device-detail-content">
+                            <div class="device-image-box">
+                                <img id="deviceImage" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80" alt="Device board" />
+                            </div>
+                            <div class="device-specs">
+                                <table id="deviceSpecTable">
+                                    <tbody></tbody>
+                                </table>
+                                <div id="deviceGuide" class="device-guide"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="espInstallWrap" class="esp-button-wrap hidden">
                         <div class="install-button-shell">
                             <i class="fas fa-download"></i>
@@ -430,7 +536,10 @@
 
                 </div>
             
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-3">
+                    <button id="verifyBtn" class="tertiary-btn text-black py-2.5 rounded-none text-sm font-bold transition">
+                        <i class="fas fa-magnifying-glass mr-1.5"></i>VERIFY
+                    </button>
                     <button id="flashBtn" disabled class="primary-btn disabled:opacity-50 disabled:cursor-not-allowed text-black py-2.5 rounded-none text-sm font-bold transition">
                         <i class="fas fa-bolt mr-1.5"></i>FLASH
                     </button>
@@ -630,6 +739,7 @@ const SPEED_MAP = {
 };
 
 const connectBtn = document.getElementById('connectBtn');
+const verifyBtn = document.getElementById('verifyBtn');
 const flashBtn = document.getElementById('flashBtn');
 const eraseBtn = document.getElementById('eraseBtn');
 const logArea = document.getElementById('logArea');
@@ -871,6 +981,67 @@ async function ensureEsp32InstallReady() {
     }
 }
 
+function renderDeviceDetails(type) {
+    const panel = document.getElementById('deviceDetailPanel');
+    const image = document.getElementById('deviceImage');
+    const tableBody = document.querySelector('#deviceSpecTable tbody');
+    const guide = document.getElementById('deviceGuide');
+
+    if (!panel || !tableBody || !guide || !image) return;
+
+    const details = {
+        BW16: {
+            image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
+            specs: [
+                ['THIẾT BỊ', 'BW16 / RTL8720DN'],
+                ['CHIP', 'Realtek AmebaD / RTL8720DN'],
+                ['KẾT NỐI', 'USB UART / BOOT MODE'],
+                ['CHẾ ĐỘ', 'Firmware flash bằng serial + reset'],
+                ['MỤC ĐÍCH', 'Wifi deauth / kiểm tra / phát triển DIY']
+            ],
+            steps: [
+                'Nối board BW16 vào máy tính qua cổng USB.',
+                'Nhấn và giữ nút BOOT hoặc giữ chân reset theo board.',
+                'Chọn firmware BW16 rồi bấm FLASH để tải file.',
+                'Sau khi hoàn tất, bỏ BOOT và kiểm tra kết quả trên console.'
+            ]
+        },
+        ESP32: {
+            image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
+            specs: [
+                ['THIẾT BỊ', 'ESP32 DevKit / ESP32-S3'],
+                ['CHIP', 'Espressif ESP32'],
+                ['KẾT NỐI', 'USB + serial port'],
+                ['CHẾ ĐỘ', 'Web installer / download tool'],
+                ['MỤC ĐÍCH', 'Firmware OTA / update nhanh / demo IoT']
+            ],
+            steps: [
+                'Kết nối ESP32 qua cổng USB và chọn đúng COM port.',
+                'Nhấn và giữ BOOT rồi nhấn EN nếu board cần vào download mode.',
+                'Bấm nút Install để ESP Web Tools tải firmware.',
+                'Sau khi upload xong, board tự khởi động lại và chạy firmware mới.'
+            ]
+        }
+    };
+
+    const selected = details[type] || details.BW16;
+    image.src = selected.image;
+    image.alt = `${type} device preview`;
+    tableBody.innerHTML = selected.specs.map(([label, value]) => `
+        <tr>
+            <th>${label}</th>
+            <td>${value}</td>
+        </tr>
+    `).join('');
+    guide.innerHTML = `
+        <strong class="hacker-text text-[10px] text-cyan-300">HƯỚNG DẪN SỬ DỤNG:</strong>
+        <ol>
+            ${selected.steps.map(step => `<li>${step}</li>`).join('')}
+        </ol>
+    `;
+    panel.classList.remove('hidden');
+}
+
 async function selectFirmware(type, evt) {
     document.querySelectorAll('.firmware-option').forEach(el => {
         el.classList.remove('active');
@@ -881,6 +1052,8 @@ async function selectFirmware(type, evt) {
 
     selectedFirmwareType = 'prebuilt';
     selectedFirmware = type;
+
+    renderDeviceDetails(type);
 
     if (espInstallWrap) {
         if (type === 'ESP32') {
@@ -1166,6 +1339,60 @@ async function changeBaudRate(targetBaud) {
     log('SUCCESS', `Baud ${targetBaud} OK`);
 }
 
+async function runVerify() {
+    try {
+        if (!port) {
+            log('ERROR', '[NO_DEVICE] Connect device first.');
+            alert('[ERROR] Connect device first!');
+            return;
+        }
+
+        if (!selectedFirmware && !selectedFirmwareType) {
+            log('ERROR', '[NO_FIRMWARE] Select firmware before verification.');
+            alert('[ERROR] Select firmware before verification!');
+            return;
+        }
+
+        verifyBtn.disabled = true;
+        statusOperation.textContent = '[VERIFYING]';
+        setProgress(20, '[VERIFYING_DEVICE]');
+        log('SYSTEM', 'Running device verification...');
+
+        await flushBuffer();
+        await sleep(200);
+
+        if (reader && writer) {
+            try {
+                const syncCheck = await waitForSync(1, 25);
+                if (!syncCheck) {
+                    log('ERROR', 'Device did not respond to verification handshake.');
+                    statusOperation.textContent = '[NOT_READY]';
+                    setProgress(0, '[VERIFY_FAIL]');
+                    return;
+                }
+            } catch (error) {
+                log('ERROR', `Verification handshake failed: ${error.message}`);
+                statusOperation.textContent = '[NOT_READY]';
+                setProgress(0, '[VERIFY_FAIL]');
+                return;
+            }
+        }
+
+        const deviceName = selectedFirmware === 'ESP32' || selectedFirmwareType === 'ESP32' ? 'ESP32' : 'BW16';
+        log('SUCCESS', `${deviceName} device verified and ready for flashing.`);
+        statusOperation.textContent = '[VERIFIED]';
+        setProgress(100, '[DEVICE_OK]');
+        await sleep(600);
+        setProgress(0, '[READY]');
+    } catch (error) {
+        log('ERROR', `Verification failed: ${error.message}`);
+        statusOperation.textContent = '[FAILED]';
+        setProgress(0, '[VERIFY_FAIL]');
+    } finally {
+        verifyBtn.disabled = false;
+    }
+}
+
 async function runOperation(mode) {
     try {
         if (!port) { 
@@ -1409,6 +1636,7 @@ connectBtn.addEventListener('click', async () => {
     }
 });
 
+verifyBtn.addEventListener('click', () => runVerify());
 flashBtn.addEventListener('click', () => runOperation('FLASH'));
 eraseBtn.addEventListener('click', () => runOperation('ERASE'));
 
