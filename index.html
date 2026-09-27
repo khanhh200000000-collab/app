@@ -336,7 +336,7 @@
                             <i class="fas fa-cube mr-1"></i>AVAILABLE_FIRMWARE:
                         </h3>
                         <div class="space-y-1">
-                            <div onclick="selectFirmware('BW16')" class="firmware-option p-2 rounded-none cursor-pointer">
+                            <div onclick="selectFirmware('BW16', event)" data-fw="BW16" class="firmware-option p-2 rounded-none cursor-pointer">
                                 <div class="flex items-center mb-1">
                                     <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
                                     <span class="hacker-text text-xs font-semibold">BW16</span>
@@ -345,7 +345,7 @@
                                 <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED]</p>
                             </div>
                            
-                            <div onclick="selectFirmware('ESP32')" class="firmware-option p-2 rounded-none cursor-pointer">
+                            <div onclick="selectFirmware('ESP32', event)" data-fw="ESP32" class="firmware-option p-2 rounded-none cursor-pointer">
                                 <div class="flex items-center mb-1">
                                     <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
                                     <span class="hacker-text text-xs font-semibold">ESP32</span>
@@ -381,7 +381,10 @@
                     </div>
 
                     <div id="espInstallWrap" class="esp-button-wrap hidden">
-                        <esp-web-install-button id="espInstallButton" manifest="./firmware/ESP32/manifest.json"></esp-web-install-button>
+                        <esp-web-install-button id="espInstallButton" manifest=""></esp-web-install-button>
+                    </div>
+                    <div id="espInstallError" class="hidden mt-3 rounded-none border border-red-500/60 bg-red-500/10 p-2 text-xs text-red-200">
+                        ESP32 firmware chưa sẵn sàng để cài đặt. Vui lòng thêm file firmware vào thư mục <strong>firmware/ESP32</strong> và đảm bảo manifest trỏ đúng tới file .bin.
                     </div>
 
                 </div>
@@ -532,13 +535,15 @@
 const FIRMWARE_ENDPOINT = './firmware';
 const espInstallWrap = document.getElementById('espInstallWrap');
 const espInstallButton = document.getElementById('espInstallButton');
+const espInstallError = document.getElementById('espInstallError');
+const ESP32_MANIFEST_PATH = './firmware/ESP32/manifest.json';
 
 const FIRMWARE_IDS = {
     FLASHLOADER: './firmware/imgtool_flashloader_amebad.bin',
     KM0: './firmware/km0_boot_all.bin',
     KM4: './firmware/km4_boot_all.bin',
     BW16: './firmware/BW16/km0_km4_image2.bin',
-    ESP32: './firmware/ESP32/manifest.json'
+    ESP32: './firmware/ESP32/beechat.bin'
 };
 
 async function loadFirmwareById(pathOrId) {
@@ -742,6 +747,42 @@ function copyLog() {
     });
 }
 
+async function ensureEsp32InstallReady() {
+    if (!espInstallButton || !espInstallWrap || !espInstallError) return false;
+
+    try {
+        const manifestRes = await fetch(ESP32_MANIFEST_PATH, { cache: 'no-store' });
+        if (!manifestRes.ok) throw new Error('manifest not found');
+
+        const manifest = await manifestRes.json();
+        const buildParts = (manifest.builds || []).flatMap(build => build.parts || []);
+        const binPaths = buildParts.map(part => part.path).filter(Boolean);
+
+        if (!binPaths.length) throw new Error('manifest has no firmware binary');
+
+        const checks = await Promise.all(binPaths.map(async (binPath) => {
+            const res = await fetch(binPath, { method: 'HEAD', cache: 'no-store' });
+            return res.ok ? binPath : null;
+        }));
+
+        const foundBin = checks.find(Boolean);
+        if (!foundBin) throw new Error('firmware binary missing');
+
+        espInstallButton.setAttribute('manifest', ESP32_MANIFEST_PATH);
+        espInstallButton.style.display = 'inline-block';
+        espInstallError.classList.add('hidden');
+        espInstallWrap.classList.remove('hidden');
+        return true;
+    } catch (error) {
+        espInstallButton.style.display = 'none';
+        espInstallActionState = 'missing';
+        espInstallError.classList.remove('hidden');
+        espInstallWrap.classList.remove('hidden');
+        log('ERROR', `ESP32 install unavailable: ${error.message}`);
+        return false;
+    }
+}
+
 async function selectFirmware(type, evt) {
     document.querySelectorAll('.firmware-option').forEach(el => {
         el.classList.remove('active');
@@ -756,9 +797,6 @@ async function selectFirmware(type, evt) {
     if (espInstallWrap) {
         if (type === 'ESP32') {
             espInstallWrap.classList.remove('hidden');
-            if (espInstallButton) {
-                espInstallButton.setAttribute('manifest', './firmware/ESP32/manifest.json');
-            }
         } else {
             espInstallWrap.classList.add('hidden');
         }
@@ -790,6 +828,14 @@ async function selectFirmware(type, evt) {
     log('SELECTION', `Selected: ${name}`);
 
     if (type === 'ESP32') {
+        const ready = await ensureEsp32InstallReady();
+        if (!ready) {
+            selectedFirmware = null;
+            if (fwSize) fwSize.textContent = 'N/A';
+            statusOperation.textContent = '[UNAVAILABLE]';
+            return;
+        }
+
         selectedFirmware = null;
         if (fwSize) fwSize.textContent = 'WEB';
         statusOperation.textContent = '[READY]';
