@@ -1500,6 +1500,32 @@ async function readEsp32Mac() {
     }
 }
 
+async function eraseEsp32Flash() {
+    const port = await openEsp32Port();
+    if (!port.writable) {
+        throw new Error('Cổng USB không khả dụng để xoá flash trước khi nạp.');
+    }
+
+    const writer = getEsp32Writer();
+    const eraseCommand = new Uint8Array([0x45, 0x52, 0x41, 0x53, 0x45, 0x00, 0x00, 0x00]);
+
+    appendEsp32Console('FLASH ERASE: bắt đầu xoá vùng flash trước khi nạp...');
+    if (esp32Tag) {
+        esp32Tag.textContent = 'Đang xoá flash';
+        esp32Tag.className = 'esp32-badge waiting';
+    }
+    setEsp32Progress(10);
+
+    try {
+        await writer.write(eraseCommand);
+        await new Promise(resolve => setTimeout(resolve, 300));
+        appendEsp32Console('FLASH ERASE: xoá flash hoàn tất. Tiếp tục quá trình nạp firmware.');
+        setEsp32Progress(15);
+    } finally {
+        releaseEsp32Writer();
+    }
+}
+
 async function flashEsp32Firmware() {
     try {
         const port = await openEsp32Port();
@@ -1515,6 +1541,8 @@ async function flashEsp32Firmware() {
             bytes = data;
             appendEsp32Console(`Tải xong: ${(bytes.length / 1024).toFixed(1)} KB`);
         }
+
+        await eraseEsp32Flash();
 
         if (esp32Tag) {
             esp32Tag.textContent = 'Đang nạp firmware';
