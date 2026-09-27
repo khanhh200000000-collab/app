@@ -95,8 +95,8 @@
         .hacker-header {
             background: linear-gradient(45deg, #00ffff, #ff00ff);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-shadow: 0 0 15px rgba(0, 255, 255, 0.6), 0 0 15px rgba(255, 0, 255, 0.6);
             letter-spacing: 2px;
             font-weight: 300;
@@ -453,14 +453,14 @@
                    
                 
 <div id="logArea" class="hacker-console font-mono p-3 overflow-y-auto whitespace-pre-wrap h-[220px]">
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╔══════════════════════════════════════════════════╗</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ███████║██╔████╔██║█████╗  ██║  ██║███████║██║  ██║║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║██╔══██║██║  ██║║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ██║  ██║██║ ╚═╝ ██║███████╗██████╔╝██║  ██║██████╔╝║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">║ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═════╝ ║</span>
-<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">╚══════════════════════════════════════════════════╝</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">╔══════════════════════════════════════════════════╗</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">║  █████╗ ███╗   ███╗███████╗██████╗  █████╗ ██████╗ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██╗████╗ ████║██╔════╝██╔══██╗██╔══██╗██╔══██╗║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">║ ███████║██╔████╔██║█████╗  ██║  ██║███████║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">║ ██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║██╔══██║██║  ██║║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">║ ██║  ██║██║ ╚═╝ ██║███████╗██████╔╝██║  ██║██████╔╝║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">║ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚═════╝ ║</span>
+<span style="background: linear-gradient(45deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">╚══════════════════════════════════════════════════╝</span>
 <span class="text-cyan-300">[BOOT_SEQUENCE]</span> AmebaD Firmware Flasher v2.1.0
 <span class="text-cyan-300">[SYSTEM_CHECK]</span> Loading system components...
 <span class="text-magenta-300">[SUCCESS]</span> Firmware server connection established
@@ -545,8 +545,6 @@
         setInterval(updateTime, 1000);
     </script>
 <script>
-const FIRMWARE_ENDPOINT = './firmware';
-
 const esp32DevicePanel = document.getElementById('esp32DevicePanel');
 const esp32FirmwareInput = document.getElementById('esp32FirmwareInput');
 const esp32ConnectBtn = document.getElementById('esp32ConnectBtn');
@@ -633,15 +631,34 @@ async function connectEsp32() {
 }
 
 async function ensureEsptoolLoaded() {
-    if (window.ESPLoader) return true;
-    await new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/esptool-js@0.0.5/dist/index.js';
-        script.onload = () => resolve(true);
-        script.onerror = () => reject(new Error('Unable to load esptool.js from CDN.'));
-        document.head.appendChild(script);
-    });
-    return !!window.ESPLoader;
+    if (window.ESPLoader && window.Transport) return true;
+
+    const urls = [
+        'https://unpkg.com/esptool-js/bundle.js',
+        'https://cdn.jsdelivr.net/npm/esptool-js@0.7.0/bundle.js'
+    ];
+
+    let lastError = null;
+    for (const src of urls) {
+        try {
+            await new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.async = true;
+                script.onload = () => resolve(true);
+                script.onerror = () => reject(new Error(`Unable to load esptool.js from ${src}.`));
+                document.head.appendChild(script);
+            });
+
+            if (window.ESPLoader && window.Transport) {
+                return true;
+            }
+        } catch (error) {
+            lastError = error;
+        }
+    }
+
+    throw lastError || new Error('Unable to load esptool.js from CDN.');
 }
 
 async function flashEsp32() {
@@ -662,36 +679,45 @@ async function flashEsp32() {
         await ensureEsptoolLoaded();
 
         const ESPLoader = window.ESPLoader;
-        if (!ESPLoader) {
-            throw new Error('esptool.js not available in this browser.');
+        const Transport = window.Transport;
+
+        if (!ESPLoader || !Transport) {
+            throw new Error('esptool.js bundle loaded but ESPLoader/Transport is missing.');
         }
 
         const firmwareData = new Uint8Array(await file.arrayBuffer());
+        const transport = new Transport(esp32Port, true);
         const loader = new ESPLoader({
-            transport: esp32Port,
+            transport,
             baudrate: 115200,
-            logLevel: 1
+            terminal: {
+                clean: () => {},
+                writeLine: (data) => appendEsp32Log(String(data), 'INFO'),
+                write: (data) => appendEsp32Log(String(data), 'INFO')
+            },
+            debugLogging: false
         });
 
-        if (typeof loader.connect === 'function') {
-            await loader.connect();
-        }
-        if (typeof loader.flashFile === 'function') {
-            await loader.flashFile({
-                fileArray: [{ data: firmwareData, address: 0x1000 }],
-                flashSize: 'keep',
-                eraseAll: false,
-                compress: true
-            });
-        } else if (typeof loader.writeFlash === 'function') {
-            await loader.writeFlash({
-                fileArray: [{ data: firmwareData, address: 0x1000 }],
-                flashSize: 'keep'
-            });
-        } else {
-            throw new Error('Unsupported esptool.js API version.');
-        }
+        appendEsp32Log('Connecting to ESP chip...', 'SYS');
+        const chipName = await loader.main();
+        appendEsp32Log(`Connected to ${chipName || 'ESP chip'}.`, 'OK');
 
+        await loader.writeFlash({
+            fileArray: [{ data: firmwareData, address: 0x1000 }],
+            flashMode: 'dio',
+            flashFreq: '40m',
+            flashSize: '4MB',
+            eraseAll: false,
+            compress: true,
+            reportProgress: (fileIndex, written, total) => {
+                if (!total) return;
+                const percent = Math.min(100, Math.round((written / total) * 100));
+                esp32FlashStatus.textContent = `[${percent}%]`;
+                appendEsp32Log(`Flashing ${percent}%`, 'SYS');
+            }
+        });
+
+        await loader.after('hard_reset');
         esp32FlashStatus.textContent = '[DONE]';
         appendEsp32Log('ESP32 flash completed successfully.', 'OK');
     } catch (error) {
@@ -732,14 +758,12 @@ if (esp32FirmwareInput) {
 openEsp32Panel();
 </script>
 <script>
-const FIRMWARE_ENDPOINT = './firmware';
-
 const FIRMWARE_IDS = {
     FLASHLOADER: './firmware/imgtool_flashloader_amebad.bin',
     KM0: './firmware/km0_boot_all.bin',
     KM4: './firmware/km4_boot_all.bin',
     VNK1: './firmware/VNK1/firmware.bin',
-    VNK2: './firmware/ESP2/beechat.bin'
+    VNK2: './firmware/VNK2/beechat.bin'
 };
 
 async function loadFirmwareById(pathOrId) {
