@@ -1647,8 +1647,19 @@ async function flashEsp32Firmware() {
             esp32Tag.className = 'esp32-badge ready';
         }
 
-        if (!port || !port.writable) {
-            throw new Error('Cổng USB không khả dụng để nạp firmware.');
+        if (!port) {
+            throw new Error('Cổng USB chưa được chọn. Hãy chọn port ESP32 trước khi flash.');
+        }
+
+        if (port && typeof port.open === 'function' && !port.opened) {
+            try {
+                await port.open({ baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' });
+            } catch (error) {
+                const message = error && error.message ? error.message : String(error);
+                if (!/already open/i.test(message) && !/is already open/i.test(message)) {
+                    throw error;
+                }
+            }
         }
 
         const { ESPLoader, Transport } = await ensureEsp32Flasher();
