@@ -328,6 +328,153 @@
             background: rgba(0,0,0,0.32);
             border: 1px solid rgba(255,255,255,0.06);
         }
+        .esp-hub-shell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .esp-hub-topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #dffcff;
+        }
+        .esp-hub-label {
+            opacity: 0.8;
+        }
+        .esp-hub-pill {
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            border: 1px solid rgba(126, 247, 215, 0.42);
+            background: rgba(126, 247, 215, 0.12);
+            color: #9ef8e9;
+            box-shadow: 0 0 12px rgba(126, 247, 215, 0.18);
+            font-weight: 700;
+        }
+        .esp-hub-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+        .esp-hub-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.7rem 0.75rem;
+            border-radius: 12px;
+            border: 1px solid rgba(105, 240, 255, 0.24);
+            background: rgba(7, 18, 24, 0.75);
+            box-shadow: inset 0 0 12px rgba(105, 240, 255, 0.04);
+        }
+        .esp-hub-card span {
+            font-size: 0.56rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(170, 217, 255, 0.8);
+        }
+        .esp-hub-card strong {
+            font-size: 0.82rem;
+            letter-spacing: 0.06em;
+            color: #effcff;
+            font-weight: 700;
+        }
+        .esp-hub-card.success {
+            border-color: rgba(126, 247, 215, 0.4);
+            background: rgba(15, 31, 30, 0.72);
+        }
+        .esp-upload-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            padding: 0.8rem;
+            border-radius: 14px;
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .esp-upload-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            font-size: 0.56rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #dffcff;
+        }
+        .esp-upload-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            background: rgba(255, 143, 251, 0.12);
+            border: 1px solid rgba(255, 143, 251, 0.32);
+            color: #ffc9fb;
+            font-weight: 700;
+        }
+        .esp-upload-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .esp-upload-btn {
+            appearance: none;
+            border: 1px solid rgba(105, 240, 255, 0.32);
+            background: rgba(105, 240, 255, 0.08);
+            color: #e6feff;
+            font-size: 0.66rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 0.7rem 0.9rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .esp-upload-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 12px rgba(105, 240, 255, 0.18);
+        }
+        .esp-upload-btn.primary {
+            background: linear-gradient(135deg, rgba(0,255,255,0.16), rgba(255,0,255,0.12));
+            border-color: rgba(0,255,255,0.5);
+            box-shadow: 0 0 18px rgba(0,255,255,0.12);
+        }
+        .esp-upload-btn.secondary {
+            background: rgba(0,0,0,0.2);
+            border-color: rgba(255, 143, 251, 0.32);
+            color: #ffd9fb;
+        }
+        .esp-install-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+        .esp-install-summary > div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            padding: 0.65rem 0.5rem;
+            border-radius: 10px;
+            background: rgba(8, 12, 16, 0.7);
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .esp-install-summary small {
+            font-size: 0.52rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(170, 217, 255, 0.72);
+        }
+        .esp-install-summary strong {
+            font-size: 0.72rem;
+            color: #f3fdff;
+        }
         .esp-loader-card::before {
             content: "";
             position: absolute;
@@ -1118,7 +1265,7 @@ async function selectFirmware(type) {
     infoDiv.classList.remove('hidden');
 
     if (type === 'ESP2') {
-        fwSize.textContent = 'WEBTOOLS';
+        fwSize.textContent = 'ESP32 HUB';
         if (espInstallerContainer) espInstallerContainer.classList.remove('hidden');
         statusOperation.textContent = '[READY]';
         log('SELECTION', `Selected: ${name} (${details})`);
@@ -1578,36 +1725,77 @@ async function installEsp32Firmware() {
     const stage = container?.querySelector('.esp-installer-stage');
     if (!container || !stage) return;
 
-    stage.innerHTML = '';
+    stage.innerHTML = `
+        <div class="esp-hub-shell">
+            <div class="esp-hub-topline">
+                <span class="esp-hub-label">Device</span>
+                <span class="esp-hub-pill">ESP32-S3</span>
+            </div>
+            <div class="esp-hub-grid">
+                <div class="esp-hub-card">
+                    <span>Board</span>
+                    <strong>Beechat</strong>
+                </div>
+                <div class="esp-hub-card success">
+                    <span>Status</span>
+                    <strong>READY</strong>
+                </div>
+                <div class="esp-hub-card">
+                    <span>Target</span>
+                    <strong>ESP32</strong>
+                </div>
+                <div class="esp-hub-card success">
+                    <span>Mode</span>
+                    <strong>BOOT</strong>
+                </div>
+            </div>
+            <div class="esp-upload-box">
+                <div class="esp-upload-head">
+                    <span>Firmware image</span>
+                    <span class="esp-upload-badge">bin</span>
+                </div>
+                <div class="esp-upload-actions">
+                    <button class="esp-upload-btn primary">Upload .bin</button>
+                    <button class="esp-upload-btn secondary">Verify</button>
+                </div>
+            </div>
+            <div class="esp-install-summary">
+                <div>
+                    <small>Memory</small>
+                    <strong>0x10000</strong>
+                </div>
+                <div>
+                    <small>Flash</small>
+                    <strong>4 MB</strong>
+                </div>
+                <div>
+                    <small>Build</small>
+                    <strong>v2.1</strong>
+                </div>
+            </div>
+        </div>
+    `;
 
-    const button = document.createElement('esp-web-install-button');
-    button.setAttribute('manifest', 'firmware/ESP2/manifest.json');
-    button.setAttribute('theme', 'dark');
-    button.setAttribute('class', 'w-full');
-    stage.appendChild(button);
     container.classList.remove('hidden');
-
     connectBtn.classList.remove('primary-btn');
     connectBtn.classList.add('bg-green-600');
-    connectBtn.innerHTML = '<i class="fas fa-wifi mr-1"></i> INSTALLER';
+    connectBtn.innerHTML = '<i class="fas fa-microchip mr-1"></i> ESP32 HUB';
     connectionStatus.textContent = '[ESP32]';
-    statusConnection.textContent = '[WEB_TOOLS]';
-    log('SYSTEM', 'Beechat ESP32 installer launched via WebTools');
+    statusConnection.textContent = '[HUB_READY]';
+    log('SYSTEM', 'ESP32 Firmware Hub interface loaded');
 }
 
 connectBtn.addEventListener('click', async () => {
     if (selectedFirmwareType === 'ESP2') {
-        const installerButton = document.querySelector('esp-web-install-button');
-        if (installerButton) {
-            installerButton.remove();
-            const shell = document.getElementById('espInstallerContainer');
-            if (shell) shell.classList.add('hidden');
+        const shell = document.getElementById('espInstallerContainer');
+        if (shell && !shell.classList.contains('hidden')) {
+            shell.classList.add('hidden');
             connectBtn.classList.remove('bg-green-600');
             connectBtn.classList.add('primary-btn');
             connectBtn.innerHTML = '<i class="fas fa-plug mr-1"></i> CONNECT';
             connectionStatus.textContent = '[DISCONNECTED]';
             statusConnection.textContent = '[IDLE]';
-            log('SYSTEM', 'ESP32 installer closed');
+            log('SYSTEM', 'ESP32 Firmware Hub closed');
             return;
         }
         await installEsp32Firmware();
