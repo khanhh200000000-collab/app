@@ -1,7 +1,7 @@
 {
-  "name": "ESP32 Firmware",
+  "name": "ESP32 BEECHAT",
   "version": "1.0.0",
-  "new_install_prompt": "Install ESP32 firmware to the connected board.",
+  "new_install_prompt": "Install ESP32 BEECHAT",
   "builds": [
     {
       "chipFamily": "ESP32",
