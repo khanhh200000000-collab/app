@@ -74,21 +74,6 @@
             color: #000;
             box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
         }
-        .tertiary-btn {
-            background: linear-gradient(135deg, #001a33 0%, #00ffae 50%, #00d4ff 100%);
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #00ffae, #00d4ff) 1;
-            color: #00131a;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-        }
-        .tertiary-btn:hover {
-            background: linear-gradient(135deg, #00ffae 0%, #00d4ff 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(0, 255, 174, 0.5), 0 0 20px rgba(0, 212, 255, 0.5);
-        }
         esp-web-install-button {
             --esp-web-tools-button-color: #00f5ff;
             --esp-web-tools-button-text-color: #00131a;
@@ -217,12 +202,26 @@
             font-size: 10px;
             line-height: 1.55;
         }
+        .device-guide strong {
+            display: block;
+            color: #00ffff;
+            margin-bottom: 0.25rem;
+        }
         .device-guide ol {
             margin: 0.25rem 0 0 1rem;
             padding: 0;
         }
         .device-guide li + li {
             margin-top: 0.2rem;
+        }
+        .device-purpose {
+            margin-top: 0.45rem;
+            padding: 0.5rem 0.6rem;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.08), rgba(255, 0, 255, 0.08));
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            color: #dff9ff;
+            font-size: 10px;
+            line-height: 1.6;
         }
         .firmware-option {
             transition: all 0.2s ease;
@@ -536,10 +535,7 @@
 
                 </div>
             
-                <div class="grid grid-cols-3 gap-3">
-                    <button id="verifyBtn" class="tertiary-btn text-black py-2.5 rounded-none text-sm font-bold transition">
-                        <i class="fas fa-magnifying-glass mr-1.5"></i>VERIFY
-                    </button>
+                <div class="grid grid-cols-2 gap-3">
                     <button id="flashBtn" disabled class="primary-btn disabled:opacity-50 disabled:cursor-not-allowed text-black py-2.5 rounded-none text-sm font-bold transition">
                         <i class="fas fa-bolt mr-1.5"></i>FLASH
                     </button>
@@ -739,7 +735,6 @@ const SPEED_MAP = {
 };
 
 const connectBtn = document.getElementById('connectBtn');
-const verifyBtn = document.getElementById('verifyBtn');
 const flashBtn = document.getElementById('flashBtn');
 const eraseBtn = document.getElementById('eraseBtn');
 const logArea = document.getElementById('logArea');
@@ -992,34 +987,38 @@ function renderDeviceDetails(type) {
     const details = {
         BW16: {
             image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
+            purpose: 'Firmware BW16 chủ yếu dùng cho board Realtek RTL8720DN với chức năng chính là deauth WiFi 2.4GHz và 5GHz, plus chế độ Evil AP / Evil Twin để thao túng hoặc đánh lạc hướng mạng WiFi mục tiêu. Đây là firmware tập trung vào tấn công và kiểm thử WiFi theo hướng deauth / evil.',
             specs: [
                 ['THIẾT BỊ', 'BW16 / RTL8720DN'],
                 ['CHIP', 'Realtek AmebaD / RTL8720DN'],
                 ['KẾT NỐI', 'USB UART / BOOT MODE'],
                 ['CHẾ ĐỘ', 'Firmware flash bằng serial + reset'],
-                ['MỤC ĐÍCH', 'Wifi deauth / kiểm tra / phát triển DIY']
+                ['CHỨC NĂNG CHÍNH', 'Deauth 2.4GHz / 5GHz / Evil AP'],
+                ['MỤC ĐÍCH', 'Dùng cho BW16 để thực hiện deauth và evil WiFi trên mạng mục tiêu']
             ],
             steps: [
                 'Nối board BW16 vào máy tính qua cổng USB.',
                 'Nhấn và giữ nút BOOT hoặc giữ chân reset theo board.',
                 'Chọn firmware BW16 rồi bấm FLASH để tải file.',
-                'Sau khi hoàn tất, bỏ BOOT và kiểm tra kết quả trên console.'
+                'Sau khi hoàn tất, bỏ BOOT và kiểm tra chức năng deauth / evil trên console.'
             ]
         },
         ESP32: {
             image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
+            purpose: 'Firmware Beechat Zero dùng 2 chip ESP32 và BW16, kết hợp chức năng chat mesh, LoRa, BLE, GPS, nRF24, game app, và các ứng dụng mạng mesh. Đây là phiên bản tích hợp đa chức năng cho hệ thống giao tiếp giữa các trạm và thiết bị ngoại vi.',
             specs: [
-                ['THIẾT BỊ', 'ESP32 DevKit / ESP32-S3'],
-                ['CHIP', 'Espressif ESP32'],
-                ['KẾT NỐI', 'USB + serial port'],
-                ['CHẾ ĐỘ', 'Web installer / download tool'],
-                ['MỤC ĐÍCH', 'Firmware OTA / update nhanh / demo IoT']
+                ['THIẾT BỊ', 'Beechat Zero / dual ESP32 + BW16'],
+                ['CHIP', 'ESP32 + RTL8720DN'],
+                ['KẾT NỐI', 'USB + serial + LoRa / BLE / RF'],
+                ['CHẾ ĐỘ', 'Web install + flash board'],
+                ['CHỨC NĂNG CHÍNH', 'Chat mesh / LoRa / BLE / GPS / Sub-GHz / nRF24 / game app'],
+                ['MỤC ĐÍCH', 'Dùng cho hệ thống mạng mesh, giao tiếp đa giao thức và trạm LoRa riêng']
             ],
             steps: [
-                'Kết nối ESP32 qua cổng USB và chọn đúng COM port.',
-                'Nhấn và giữ BOOT rồi nhấn EN nếu board cần vào download mode.',
-                'Bấm nút Install để ESP Web Tools tải firmware.',
-                'Sau khi upload xong, board tự khởi động lại và chạy firmware mới.'
+                'Kết nối Beechat Zero qua cổng USB và chọn đúng COM port.',
+                'Nhấn BOOT/RESET nếu board cần vào download mode.',
+                'Bấm nút Install hoặc FLASH để nạp firmware.',
+                'Sau khi tải xong, kiểm tra chức năng mesh chat, LoRa, GPS, NRF hoặc BLE trên thiết bị.'
             ]
         }
     };
@@ -1034,7 +1033,9 @@ function renderDeviceDetails(type) {
         </tr>
     `).join('');
     guide.innerHTML = `
-        <strong class="hacker-text text-[10px] text-cyan-300">HƯỚNG DẪN SỬ DỤNG:</strong>
+        <strong>CHỨC NĂNG CHÍNH:</strong>
+        <div class="device-purpose">${selected.purpose}</div>
+        <strong>HƯỚNG DẪN SỬ DỤNG:</strong>
         <ol>
             ${selected.steps.map(step => `<li>${step}</li>`).join('')}
         </ol>
@@ -1339,60 +1340,6 @@ async function changeBaudRate(targetBaud) {
     log('SUCCESS', `Baud ${targetBaud} OK`);
 }
 
-async function runVerify() {
-    try {
-        if (!port) {
-            log('ERROR', '[NO_DEVICE] Connect device first.');
-            alert('[ERROR] Connect device first!');
-            return;
-        }
-
-        if (!selectedFirmware && !selectedFirmwareType) {
-            log('ERROR', '[NO_FIRMWARE] Select firmware before verification.');
-            alert('[ERROR] Select firmware before verification!');
-            return;
-        }
-
-        verifyBtn.disabled = true;
-        statusOperation.textContent = '[VERIFYING]';
-        setProgress(20, '[VERIFYING_DEVICE]');
-        log('SYSTEM', 'Running device verification...');
-
-        await flushBuffer();
-        await sleep(200);
-
-        if (reader && writer) {
-            try {
-                const syncCheck = await waitForSync(1, 25);
-                if (!syncCheck) {
-                    log('ERROR', 'Device did not respond to verification handshake.');
-                    statusOperation.textContent = '[NOT_READY]';
-                    setProgress(0, '[VERIFY_FAIL]');
-                    return;
-                }
-            } catch (error) {
-                log('ERROR', `Verification handshake failed: ${error.message}`);
-                statusOperation.textContent = '[NOT_READY]';
-                setProgress(0, '[VERIFY_FAIL]');
-                return;
-            }
-        }
-
-        const deviceName = selectedFirmware === 'ESP32' || selectedFirmwareType === 'ESP32' ? 'ESP32' : 'BW16';
-        log('SUCCESS', `${deviceName} device verified and ready for flashing.`);
-        statusOperation.textContent = '[VERIFIED]';
-        setProgress(100, '[DEVICE_OK]');
-        await sleep(600);
-        setProgress(0, '[READY]');
-    } catch (error) {
-        log('ERROR', `Verification failed: ${error.message}`);
-        statusOperation.textContent = '[FAILED]';
-        setProgress(0, '[VERIFY_FAIL]');
-    } finally {
-        verifyBtn.disabled = false;
-    }
-}
-
 async function runOperation(mode) {
     try {
         if (!port) { 
@@ -1636,7 +1583,6 @@ connectBtn.addEventListener('click', async () => {
     }
 });
 
-verifyBtn.addEventListener('click', () => runVerify());
 flashBtn.addEventListener('click', () => runOperation('FLASH'));
 eraseBtn.addEventListener('click', () => runOperation('ERASE'));
 
