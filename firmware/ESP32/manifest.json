@@ -1,11 +1,15 @@
 {
-  "name": "Beechat",
+  "name": "ESP32 BEECHAT",
   "version": "1.0.0",
+  "new_install_prompt": "Install ESP32 BEECHAT",
   "builds": [
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "https://github.com/khanhh200000000-collab/app/blob/main/firmware/ESP32/beechat.bin", "offset": 0 }
+        {
+          "path": "https://raw.githubusercontent.com/khanhh200000000-collab/app/main/beechat.bin",
+          "offset": 0
+        }
       ]
     }
   ]
