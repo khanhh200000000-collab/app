@@ -1417,15 +1417,66 @@ function setEsp32Progress(percent) {
     esp32ProgressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
 }
 
+function createEsp32Terminal() {
+    return {
+        clean() {},
+        write(data) {
+            const text = String(data || '').trim();
+            if (text) appendEsp32Console(text);
+        },
+        writeLine(data) {
+            const text = String(data || '').trim();
+            if (text) appendEsp32Console(text);
+        }
+    };
+}
+
+async function closeEsp32Port() {
+    esp32Reading = false;
+    if (esp32Reader) {
+        try { await esp32Reader.cancel(); } catch (e) {}
+        releaseEsp32Reader();
+    }
+    if (esp32Writer) {
+        try { esp32Writer.releaseLock(); } catch (e) {}
+        esp32Writer = null;
+    }
+    if (esp32Port) {
+        try {
+            if (esp32Port.opened) {
+                await esp32Port.close();
+            }
+        } catch (e) {}
+        esp32Port = null;
+    }
+}
+
 async function openEsp32Port() {
     if (!('serial' in navigator)) {
         throw new Error('Web Serial không hỗ trợ trên trình duyệt này. Hãy dùng Chrome/Edge.');
     }
+
     if (!esp32Port) {
         esp32Port = await navigator.serial.requestPort();
-        await esp32Port.open({ baudRate: 115200 });
     }
-    return esp32Port;
+
+    if (esp32Port && esp32Port.opened) {
+        return esp32Port;
+    }
+
+    if (esp32Port && esp32Port.open && typeof esp32Port.open === 'function') {
+        try {
+            await esp32Port.open({ baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' });
+            return esp32Port;
+        } catch (error) {
+            if (error && /already open/i.test(error.message || String(error))) {
+                return esp32Port;
+            }
+            throw error;
+        }
+    }
+
+    throw new Error('Không thể mở cổng USB ESP32. Hãy kiểm tra lại cáp và quyền truy cập Web Serial.');
 }
 
 function getEsp32Writer() {
@@ -1554,11 +1605,7 @@ async function eraseEsp32Flash() {
     const esploader = new ESPLoader({
         transport,
         baudrate: 115200,
-        terminal: {
-            clean() {},
-            write(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); },
-            writeLine(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); }
-        },
+        terminal: createEsp32Terminal(),
         debugLogging: false
     });
 
@@ -1577,6 +1624,7 @@ async function eraseEsp32Flash() {
         setEsp32Progress(15);
     } finally {
         try { await transport.disconnect(); } catch (e) {}
+        await closeEsp32Port();
     }
 }
 
@@ -1624,11 +1672,7 @@ async function flashEsp32Firmware() {
         const esploader = new ESPLoader({
             transport,
             baudrate: 115200,
-            terminal: {
-                clean() {},
-                write(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); },
-                writeLine(data) { const text = String(data).trim(); if (text) appendEsp32Console(text); }
-            },
+            terminal: createEsp32Terminal(),
             debugLogging: false
         });
 
@@ -1668,27 +1712,18 @@ async function flashEsp32Firmware() {
         esp32FlashBusy = false;
         setEsp32Progress(100);
         releaseEsp32Writer();
-        if (esp32Port) {
-            try { await esp32Port.close(); } catch (e) {}
-            esp32Port = null;
-        }
+        await closeEsp32Port();
     }
 }
 
 if (esp32CloseBtn) {
-    esp32CloseBtn.addEventListener('click', () => {
+    esp32CloseBtn.addEventListener('click', async () => {
         esp32Reading = false;
         if (esp32Reader) {
-            esp32Reader.cancel();
+            try { esp32Reader.cancel(); } catch (e) {}
             releaseEsp32Reader();
         }
-        if (esp32Port) {
-            try {
-                esp32Port.close();
-            } catch (e) {}
-        }
-        esp32Port = null;
-        releaseEsp32Writer();
+        await closeEsp32Port();
         const panel = document.getElementById('esp32HubPanel');
         if (panel) panel.classList.add('hidden');
     });
