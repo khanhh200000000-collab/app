@@ -1472,50 +1472,50 @@ async function readEsp32Mac() {
 async function flashEsp32Firmware() {
     try {
         const port = await openEsp32Port();
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.bin';
-        fileInput.onchange = async () => {
-            const file = fileInput.files?.[0];
-            if (!file) {
-                appendEsp32Console('Chưa chọn file firmware ESP32.');
-                return;
-            }
 
-            const buffer = await file.arrayBuffer();
-            const bytes = new Uint8Array(buffer);
-            const total = bytes.length;
-            appendEsp32Console(`Bắt đầu nạp ${file.name} (${(total / 1024).toFixed(1)} KB)`);
+        let bytes;
+        if (selectedFirmware instanceof Uint8Array && selectedFirmware.length > 0) {
+            bytes = selectedFirmware;
+            appendEsp32Console(`Đang nạp firmware đã chọn: ${FIRMWARE_IDS.VNK3} (${(bytes.length / 1024).toFixed(1)} KB)`);
+        } else {
+            appendEsp32Console(`Tự động tải file từ thư mục VNK3: ${FIRMWARE_IDS.VNK3}`);
+            const data = await loadFirmwareById(FIRMWARE_IDS.VNK3);
+            selectedFirmware = data;
+            bytes = data;
+            appendEsp32Console(`Tải xong: ${(bytes.length / 1024).toFixed(1)} KB`);
+        }
+
+        if (esp32Tag) {
+            esp32Tag.textContent = 'Đang nạp firmware';
+            esp32Tag.className = 'esp32-badge ready';
+        }
+
+        if (!port.writable) {
+            throw new Error('Cổng USB không khả dụng để nạp firmware.');
+        }
+
+        const writer = port.writable.getWriter();
+        const chunkSize = 64;
+        const total = bytes.length;
+        try {
+            for (let i = 0; i < total; i += chunkSize) {
+                const chunk = bytes.slice(i, i + chunkSize);
+                await writer.write(chunk);
+                setEsp32Progress((i / total) * 100);
+                if (i % (chunkSize * 200) === 0 || i + chunkSize >= total) {
+                    appendEsp32Console(`Nạp chunk ${Math.min(i + chunkSize, total)}/${total} bytes`);
+                }
+                await new Promise(resolve => setTimeout(resolve, 20));
+            }
+            setEsp32Progress(100);
+            appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
             if (esp32Tag) {
-                esp32Tag.textContent = 'Đang nạp firmware';
+                esp32Tag.textContent = 'Nạp thành công';
                 esp32Tag.className = 'esp32-badge ready';
             }
-
-            if (!port.writable) {
-                throw new Error('Cổng USB không khả dụng để nạp firmware.');
-            }
-
-            const writer = port.writable.getWriter();
-            const chunkSize = 64;
-            try {
-                for (let i = 0; i < bytes.length; i += chunkSize) {
-                    const chunk = bytes.slice(i, i + chunkSize);
-                    await writer.write(chunk);
-                    setEsp32Progress((i / total) * 100);
-                    appendEsp32Console(`Nạp chunk ${Math.min(i + chunkSize, total)}/${total} bytes`);
-                    await new Promise(resolve => setTimeout(resolve, 20));
-                }
-                setEsp32Progress(100);
-                appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
-                if (esp32Tag) {
-                    esp32Tag.textContent = 'Nạp thành công';
-                    esp32Tag.className = 'esp32-badge ready';
-                }
-            } finally {
-                writer.releaseLock();
-            }
-        };
-        fileInput.click();
+        } finally {
+            writer.releaseLock();
+        }
     } catch (error) {
         appendEsp32Console(`LỖI NẠP: ${error.message}`);
         if (esp32Tag) {
