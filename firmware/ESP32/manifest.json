@@ -1,11 +1,15 @@
 {
-  "name": "Beechat",
+  "name": "ESP32 Firmware",
   "version": "1.0.0",
+  "new_install_prompt": "Install ESP32 firmware to the connected board.",
   "builds": [
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "beechat.bin", "offset": 0 }
+        {
+          "path": "esp32.bin",
+          "offset": 0
+        }
       ]
     }
   ]
