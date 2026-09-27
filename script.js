@@ -35,7 +35,7 @@ const ESP32_MANIFEST_PATH = './firmware/ESP32/manifest.json';
 const ESP32_GITHUB_BIN = 'https://raw.githubusercontent.com/khanhh200000000-collab/app/main/firmware/ESP32/beechat.bin';
 
 const FIRMWARE_IDS = {
-    FLASHLOADER: './firmware/imgtool_flashloader_amebad.bin',
+    FLASHLOADER: './firmware/bw16.bin',
     KM0: './firmware/km0_boot_all.bin',
     KM4: './firmware/km4_boot_all.bin',
     BW16: './firmware/BW16/km0_km4_image2.bin',
