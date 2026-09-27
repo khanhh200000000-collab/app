@@ -171,120 +171,6 @@
             vertical-align: middle;
             box-shadow: 0 0 8px #00ffff;
         }
-        .esp32-panel {
-            margin-top: 12px;
-            background: rgba(9, 15, 27, 0.9);
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), 0 0 20px rgba(255, 0, 255, 0.2);
-            overflow: hidden;
-        }
-        .esp32-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            background: rgba(0, 255, 255, 0.08);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.25);
-        }
-        .esp32-chip {
-            font-size: 11px;
-            color: #00ffff;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-        .esp32-badge {
-            font-size: 9px;
-            padding: 3px 8px;
-            border: 1px solid rgba(0, 255, 255, 0.5);
-            background: rgba(0, 255, 255, 0.08);
-            color: #dff9ff;
-            letter-spacing: 1px;
-        }
-        .esp32-badge.waiting {
-            border-color: rgba(255, 189, 89, 0.7);
-            color: #ffd166;
-            background: rgba(255, 189, 89, 0.08);
-        }
-        .esp32-badge.ready {
-            border-color: rgba(34, 197, 94, 0.7);
-            color: #86efac;
-            background: rgba(34, 197, 94, 0.08);
-        }
-        .esp32-actions {
-            display: flex;
-            gap: 8px;
-            padding: 10px 12px 0;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .esp32-erase {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: auto;
-            padding: 6px 8px;
-            font-size: 9px;
-            color: #dff9ff;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(0, 255, 255, 0.25);
-        }
-        .esp32-erase input {
-            accent-color: #00ffff;
-        }
-        .esp32-btn {
-            background: linear-gradient(135deg, #001a33 0%, #00ffff 50%, #ff00ff 100%);
-            color: #000;
-            border: 2px solid transparent;
-            border-image: linear-gradient(45deg, #00ffff, #ff00ff) 1;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 8px 12px;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-        }
-        .esp32-btn.ghost {
-            background: rgba(0, 0, 0, 0.2);
-            color: #00ffff;
-            border-color: rgba(0, 255, 255, 0.4);
-        }
-        .esp32-btn.close {
-            margin-left: auto;
-            background: rgba(255, 0, 0, 0.08);
-            color: #ff9aa2;
-            border-color: rgba(255, 0, 0, 0.5);
-        }
-        .esp32-progress {
-            margin: 10px 12px 0;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            height: 10px;
-            overflow: hidden;
-        }
-        .esp32-progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #00ffff, #ff00ff);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
-            transition: width 0.2s ease;
-        }
-        .esp32-console {
-            margin: 10px 12px 12px;
-            min-height: 120px;
-            max-height: 180px;
-            overflow-y: auto;
-            background: rgba(0, 0, 0, 0.75);
-            border: 1px solid rgba(0, 255, 255, 0.25);
-            color: #dff9ff;
-            font-family: 'Source Code Pro', monospace;
-            font-size: 10px;
-            line-height: 1.5;
-            padding: 8px;
-            white-space: pre-wrap;
-        }
-
        
         .user-dropdown {
             position: fixed;
@@ -440,15 +326,16 @@
                                 </div>
                                 <p class="hacker-subtext text-xs mb-1">[RTL8720DN BW16-KIT VNKPRO]</p>
                             </div>
-                           
-                            <div data-fw="VNK3" onclick="selectFirmware('VNK3', event)" class="firmware-option p-2 rounded-none cursor-pointer">
+
+                            <div onclick="openEsp32Panel()" class="firmware-option p-2 rounded-none cursor-pointer">
                                 <div class="flex items-center mb-1">
-                                    <div class="w-1.5 h-1.5 bg-cyan-400 mr-1.5" style="box-shadow: 0 0 8px #00ffff;"></div>
-                                    <span class="hacker-text text-xs font-semibold">ESP32 Firmware Hub</span>
-                                    <span class="ml-auto hacker-subtext text-xs border border-cyan-400/40 px-1 py-0">VNK3 · ESP32</span>
+                                    <div class="w-1.5 h-1.5 bg-emerald-400 mr-1.5" style="box-shadow: 0 0 8px #34d399;"></div>
+                                    <span class="hacker-text text-xs font-semibold">BEECHAT ESP32</span>
+                                    <span class="ml-auto hacker-subtext text-xs border border-emerald-400/40 px-1 py-0">common</span>
                                 </div>
-                                <p class="hacker-subtext text-xs mb-1">[ESP32 · FLASH VIA USB · LẤY MAC]</p>
+                                <p class="hacker-subtext text-xs mb-1">[ESP32 / esptool.js / nạp thường dùng]</p>
                             </div>
+                           
                         </div>
                     </div>
                 
@@ -475,23 +362,44 @@
                         </div>
                     </div>
 
-                    <div id="esp32HubPanel" class="esp32-panel hidden">
-                        <div class="esp32-panel-header">
-                            <span class="esp32-chip">ESP32 Firmware Hub</span>
-                            <span id="esp32HubTag" class="esp32-badge waiting">Sẵn sàng nạp</span>
+                    <div id="esp32DevicePanel" class="bg-black p-3 border-2 border-image-linear-gradient(45deg, #00ffff, #ff00ff) mt-3 hidden">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="hacker-text text-xs font-bold mb-0">BEECHAT NẠP ESP32</h4>
+                            <button id="esp32CloseBtn" class="hacker-text text-[10px] bg-red-500/20 border border-red-400/60 px-2 py-1 hover:bg-red-500/30 transition">
+                                CLOSE
+                            </button>
                         </div>
-                        <div class="esp32-actions">
-                            <button id="esp32FlashBtn" class="esp32-btn" type="button">⚡ Flash qua USB</button>
-                            <button id="esp32MacBtn" class="esp32-btn ghost" type="button">📡 Lấy MAC</button>
-                            <label class="esp32-erase" for="esp32EraseToggle">
-                                <input id="esp32EraseToggle" type="checkbox" checked>
-                                <span>Erase trước khi nạp</span>
-                            </label>
-                            <button id="esp32CloseBtn" class="esp32-btn close" type="button" title="Đóng">✕</button>
+
+                        <div class="space-y-2">
+                            <label class="hacker-subtext text-[10px] uppercase tracking-wide">Firmware file (.bin)</label>
+                            <input id="esp32FirmwareInput" type="file" accept=".bin,.img,.firmware" class="w-full bg-black border border-cyan-400/30 p-2 text-[10px] hacker-subtext" />
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="esp32ConnectBtn" class="primary-btn text-black py-2 rounded-none text-xs font-bold transition">
+                                    <i class="fas fa-plug mr-1"></i>CONNECT
+                                </button>
+                                <button id="esp32FlashBtn" disabled class="secondary-btn disabled:opacity-50 disabled:cursor-not-allowed py-2 rounded-none text-xs font-bold transition">
+                                    <i class="fas fa-bolt mr-1"></i>FLASH
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="status-item">
+                                    <div class="hacker-subtext text-[10px] mb-0.5">PORT</div>
+                                    <div id="esp32PortStatus" class="hacker-text text-[10px] font-semibold">[IDLE]</div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="hacker-subtext text-[10px] mb-0.5">STATUS</div>
+                                    <div id="esp32FlashStatus" class="hacker-text text-[10px] font-semibold">[READY]</div>
+                                </div>
+                            </div>
+
+                            <div id="esp32Log" class="hacker-console font-mono text-[10px] p-2 overflow-y-auto whitespace-pre-wrap h-28 bg-black border border-cyan-400/30">
+<span class="text-cyan-300">[ESP32]</span> waiting for firmware...
+                            </div>
                         </div>
-                        <div class="esp32-progress"><div id="esp32ProgressBar" class="esp32-progress-bar"></div></div>
-                        <pre id="esp32Console" class="esp32-console">Sẵn sàng. Kết nối board ESP32, chọn firmware và bấm "Flash qua USB" để bắt đầu.</pre>
                     </div>
+
                 </div>
             
                 <div class="grid grid-cols-2 gap-3">
@@ -610,31 +518,219 @@
         const avatarBtn = document.getElementById('userAvatar');
         const panel = document.getElementById('userInfoPanel');
 
-        avatarBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            panel.classList.toggle('show');
-        });
+        if (avatarBtn && panel) {
+            avatarBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                panel.classList.toggle('show');
+            });
 
-        // Click ra ngoài để đóng
-        document.addEventListener('click', () => {
-            panel.classList.remove('show');
-        });
+            document.addEventListener('click', () => {
+                panel.classList.remove('show');
+            });
 
-        // Ngăn click trong panel làm đóng
-        panel.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+            panel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
 
-        // Cập nhật thời gian thực
         function updateTime() {
+            const liveTimeEl = document.getElementById('live-time');
+            if (!liveTimeEl) return;
             const now = new Date();
             const timeStr = now.toLocaleTimeString('vi-VN');
             const dateStr = now.toLocaleDateString('vi-VN');
-            document.getElementById('live-time').textContent = `${dateStr} ${timeStr}`;
+            liveTimeEl.textContent = `${dateStr} ${timeStr}`;
         }
         updateTime();
         setInterval(updateTime, 1000);
     </script>
+<script>
+const FIRMWARE_ENDPOINT = './firmware';
+
+const esp32DevicePanel = document.getElementById('esp32DevicePanel');
+const esp32FirmwareInput = document.getElementById('esp32FirmwareInput');
+const esp32ConnectBtn = document.getElementById('esp32ConnectBtn');
+const esp32FlashBtn = document.getElementById('esp32FlashBtn');
+const esp32CloseBtn = document.getElementById('esp32CloseBtn');
+const esp32PortStatus = document.getElementById('esp32PortStatus');
+const esp32FlashStatus = document.getElementById('esp32FlashStatus');
+const esp32LogEl = document.getElementById('esp32Log');
+let esp32Port = null;
+
+function appendEsp32Log(msg, level = 'INFO') {
+    if (!esp32LogEl) return;
+    const stamp = new Date().toLocaleTimeString([], { hour12: false });
+    const colors = {
+        INFO: 'text-cyan-300',
+        OK: 'text-green-400',
+        ERR: 'text-red-400',
+        SYS: 'text-yellow-300'
+    };
+    const color = colors[level] || 'text-cyan-300';
+    esp32LogEl.innerHTML += `<br><span class="text-slate-400">[${stamp}]</span> <span class="${color}">[${level}]</span> ${msg}`;
+    esp32LogEl.scrollTop = esp32LogEl.scrollHeight;
+}
+
+function openEsp32Panel() {
+    if (esp32DevicePanel) {
+        esp32DevicePanel.classList.remove('hidden');
+    }
+    appendEsp32Log('BeeChat ESP32 module ready.', 'SYS');
+}
+
+async function closeEsp32Port() {
+    if (!esp32Port) {
+        esp32PortStatus.textContent = '[IDLE]';
+        esp32FlashStatus.textContent = '[READY]';
+        esp32FlashBtn.disabled = true;
+        return;
+    }
+
+    try {
+        if (esp32Port.readable) {
+            const reader = esp32Port.readable.getReader();
+            try { await reader.cancel(); } catch (e) {}
+            reader.releaseLock();
+        }
+        if (esp32Port.writable) {
+            const writer = esp32Port.writable.getWriter();
+            try { await writer.close(); } catch (e) {}
+            writer.releaseLock();
+        }
+        await esp32Port.close();
+    } catch (error) {
+        console.warn('closeEsp32Port failed', error);
+    } finally {
+        esp32Port = null;
+        esp32PortStatus.textContent = '[IDLE]';
+        esp32FlashStatus.textContent = '[READY]';
+        esp32FlashBtn.disabled = true;
+        appendEsp32Log('Serial port closed.', 'OK');
+    }
+}
+
+async function connectEsp32() {
+    try {
+        if (!navigator.serial) {
+            throw new Error('Web Serial API not supported in this browser.');
+        }
+        if (esp32Port) {
+            await closeEsp32Port();
+        }
+
+        appendEsp32Log('Requesting ESP32 serial port...', 'SYS');
+        esp32Port = await navigator.serial.requestPort();
+        await esp32Port.open({ baudRate: 115200 });
+        esp32PortStatus.textContent = '[CONNECTED]';
+        esp32FlashStatus.textContent = '[READY]';
+        esp32FlashBtn.disabled = !(esp32FirmwareInput && esp32FirmwareInput.files.length > 0);
+        appendEsp32Log('ESP32 connected on serial port.', 'OK');
+    } catch (error) {
+        esp32PortStatus.textContent = '[ERROR]';
+        esp32FlashStatus.textContent = '[FAILED]';
+        appendEsp32Log(`Connect failed: ${error.message}`, 'ERR');
+    }
+}
+
+async function ensureEsptoolLoaded() {
+    if (window.ESPLoader) return true;
+    await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/esptool-js@0.0.5/dist/index.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => reject(new Error('Unable to load esptool.js from CDN.'));
+        document.head.appendChild(script);
+    });
+    return !!window.ESPLoader;
+}
+
+async function flashEsp32() {
+    const file = esp32FirmwareInput && esp32FirmwareInput.files && esp32FirmwareInput.files[0];
+    if (!file) {
+        appendEsp32Log('Please choose a firmware file first.', 'ERR');
+        return;
+    }
+
+    if (!esp32Port) {
+        appendEsp32Log('Connect the ESP32 serial port first.', 'ERR');
+        return;
+    }
+
+    try {
+        esp32FlashStatus.textContent = '[FLASHING]';
+        appendEsp32Log(`Loading ${file.name} for ESP32 flash...`, 'SYS');
+        await ensureEsptoolLoaded();
+
+        const ESPLoader = window.ESPLoader;
+        if (!ESPLoader) {
+            throw new Error('esptool.js not available in this browser.');
+        }
+
+        const firmwareData = new Uint8Array(await file.arrayBuffer());
+        const loader = new ESPLoader({
+            transport: esp32Port,
+            baudrate: 115200,
+            logLevel: 1
+        });
+
+        if (typeof loader.connect === 'function') {
+            await loader.connect();
+        }
+        if (typeof loader.flashFile === 'function') {
+            await loader.flashFile({
+                fileArray: [{ data: firmwareData, address: 0x1000 }],
+                flashSize: 'keep',
+                eraseAll: false,
+                compress: true
+            });
+        } else if (typeof loader.writeFlash === 'function') {
+            await loader.writeFlash({
+                fileArray: [{ data: firmwareData, address: 0x1000 }],
+                flashSize: 'keep'
+            });
+        } else {
+            throw new Error('Unsupported esptool.js API version.');
+        }
+
+        esp32FlashStatus.textContent = '[DONE]';
+        appendEsp32Log('ESP32 flash completed successfully.', 'OK');
+    } catch (error) {
+        esp32FlashStatus.textContent = '[FAILED]';
+        appendEsp32Log(`Flash failed: ${error.message || error}`, 'ERR');
+    }
+}
+
+if (esp32ConnectBtn) {
+    esp32ConnectBtn.addEventListener('click', connectEsp32);
+}
+
+if (esp32FlashBtn) {
+    esp32FlashBtn.addEventListener('click', flashEsp32);
+}
+
+if (esp32CloseBtn) {
+    esp32CloseBtn.addEventListener('click', async () => {
+        if (esp32DevicePanel) {
+            esp32DevicePanel.classList.add('hidden');
+        }
+        await closeEsp32Port();
+    });
+}
+
+if (esp32FirmwareInput) {
+    esp32FirmwareInput.addEventListener('change', () => {
+        const hasFile = esp32FirmwareInput.files && esp32FirmwareInput.files.length > 0;
+        if (esp32FlashBtn) {
+            esp32FlashBtn.disabled = !hasFile || !esp32Port;
+        }
+        if (hasFile) {
+            appendEsp32Log(`File selected: ${esp32FirmwareInput.files[0].name}`, 'INFO');
+        }
+    });
+}
+
+openEsp32Panel();
+</script>
 <script>
 const FIRMWARE_ENDPOINT = './firmware';
 
@@ -643,8 +739,7 @@ const FIRMWARE_IDS = {
     KM0: './firmware/km0_boot_all.bin',
     KM4: './firmware/km4_boot_all.bin',
     VNK1: './firmware/VNK1/firmware.bin',
-    VNK2: './firmware/ESP2/beechat.bin',
-    VNK3: './firmware/ESP2/beechat.bin'
+    VNK2: './firmware/ESP2/beechat.bin'
 };
 
 async function loadFirmwareById(pathOrId) {
@@ -720,11 +815,10 @@ async function loadSystemFirmware() {
         systemFirmwareCache.KM4 = await loadFirmwareById(FIRMWARE_IDS.KM4);
         setProgress(70, '[KM4_LOADED]');
 
-        // Kiểm tra tồn tại VNK1, VNK2, VNK3 (dùng HEAD request)
+        // Kiểm tra tồn tại VNK1 và VNK2 (dùng HEAD request)
         const appPromises = [
             checkFirmwareExists(FIRMWARE_IDS.VNK1),
-            checkFirmwareExists(FIRMWARE_IDS.VNK2),
-            checkFirmwareExists(FIRMWARE_IDS.VNK3)
+            checkFirmwareExists(FIRMWARE_IDS.VNK2)
         ];
 
         const results = await Promise.allSettled(appPromises);
@@ -761,10 +855,6 @@ async function loadApplicationFirmware(type) {
         case 'VNK2':
             url = FIRMWARE_IDS.VNK2;
             name = 'VNK2';
-            break;
-        case 'VNK3':
-            url = FIRMWARE_IDS.VNK3;
-            name = 'ESP32 Firmware Hub';
             break;
         default:
             throw new Error(`Unknown firmware type: ${type}`);
@@ -868,10 +958,6 @@ async function selectFirmware(type, evt) {
     const fwName = document.getElementById('fwName');
     const fwDetails = document.getElementById('fwDetails');
     const fwSize = document.getElementById('fwSize');
-    const esp32Panel = document.getElementById('esp32HubPanel');
-    const isEsp32Hub = type === 'VNK3';
-    if (esp32Panel) esp32Panel.classList.toggle('hidden', !isEsp32Hub);
-
     let name = '', details = '';
     switch(type) {
         case 'VNK1':
@@ -882,10 +968,8 @@ async function selectFirmware(type, evt) {
             name = '[VNK2]';
             details = 'RTL8720DN BW16-KIT + VNKPRO ';
             break;
-        case 'VNK3':
-            name = 'ESP32 Firmware Hub';
-            details = 'ESP32 · Flash qua USB · Lấy MAC';
-            break;
+        default:
+            throw new Error(`Unknown firmware type: ${type}`);
     }
 
     if (infoDiv) infoDiv.classList.remove('hidden');
@@ -894,18 +978,6 @@ async function selectFirmware(type, evt) {
     if (fwSize) fwSize.textContent = 'LOADING...';
 
     log('SELECTION', `Selected: ${name}`);
-
-    if (isEsp32Hub && esp32Panel) {
-        const esp32Console = document.getElementById('esp32Console');
-        const esp32Tag = document.getElementById('esp32HubTag');
-        const esp32Bar = document.getElementById('esp32ProgressBar');
-        if (esp32Console) esp32Console.textContent = 'ESP32 Firmware Hub đã sẵn sàng. Cắm board ESP32 vào USB, bấm "Lấy MAC" hoặc "Flash qua USB".';
-        if (esp32Tag) {
-            esp32Tag.textContent = 'Sẵn sàng nạp';
-            esp32Tag.className = 'esp32-badge waiting';
-        }
-        if (esp32Bar) esp32Bar.style.width = '0%';
-    }
 
     try {
         const firmwareData = await loadApplicationFirmware(type);
@@ -1388,365 +1460,6 @@ connectBtn.addEventListener('click', async () => {
 
 flashBtn.addEventListener('click', () => runOperation('FLASH'));
 eraseBtn.addEventListener('click', () => runOperation('ERASE'));
-
-const esp32Console = document.getElementById('esp32Console');
-const esp32Tag = document.getElementById('esp32HubTag');
-const esp32ProgressBar = document.getElementById('esp32ProgressBar');
-const esp32CloseBtn = document.getElementById('esp32CloseBtn');
-const esp32MacBtn = document.getElementById('esp32MacBtn');
-const esp32FlashBtn = document.getElementById('esp32FlashBtn');
-const esp32EraseToggle = document.getElementById('esp32EraseToggle');
-
-let esp32Port = null;
-let esp32Reader = null;
-let esp32Writer = null;
-let esp32Reading = false;
-let esp32DetectedMac = null;
-let esp32FlashBusy = false;
-let esp32OpenPromise = null;
-
-function appendEsp32Console(message) {
-    if (!esp32Console) return;
-    const now = new Date();
-    const pad = (n) => String(n).padStart(2, '0');
-    esp32Console.textContent += `\n[${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}] ${message}`;
-    esp32Console.scrollTop = esp32Console.scrollHeight;
-}
-
-function setEsp32Progress(percent) {
-    if (!esp32ProgressBar) return;
-    esp32ProgressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
-}
-
-function createEsp32Terminal() {
-    return {
-        clean() {},
-        write(data) {
-            const text = String(data || '');
-            if (!text) return;
-            const lines = text.split(/\r?\n/);
-            lines.forEach((line) => {
-                const clean = line.replace(/\r/g, '').trim();
-                if (clean) appendEsp32Console(`[ESP] ${clean}`);
-            });
-        },
-        writeLine(data) {
-            const text = String(data || '');
-            if (!text) return;
-            const lines = text.split(/\r?\n/);
-            lines.forEach((line) => {
-                const clean = line.replace(/\r/g, '').trim();
-                if (clean) appendEsp32Console(`[ESP] ${clean}`);
-            });
-        }
-    };
-}
-
-async function closeEsp32Port() {
-    esp32Reading = false;
-
-    if (esp32Reader) {
-        try { await esp32Reader.cancel(); } catch (e) {}
-        releaseEsp32Reader();
-    }
-
-    if (esp32Writer) {
-        try { esp32Writer.releaseLock(); } catch (e) {}
-        esp32Writer = null;
-    }
-
-    if (esp32Port) {
-        try {
-            if (typeof esp32Port.opened === 'boolean' && esp32Port.opened && typeof esp32Port.close === 'function') {
-                await esp32Port.close();
-            }
-        } catch (e) {}
-        esp32Port = null;
-    }
-
-    esp32OpenPromise = null;
-}
-
-async function openEsp32Port() {
-    if (!('serial' in navigator)) {
-        throw new Error('Web Serial không hỗ trợ trên trình duyệt này. Hãy dùng Chrome/Edge.');
-    }
-
-    if (window.location.protocol === 'file:') {
-        appendEsp32Console('Lưu ý: mở trang qua http://localhost:8000 hoặc HTTPS, vì file:// có thể chặn Web Serial và load firmware.');
-    }
-
-    if (esp32Port && typeof esp32Port.opened === 'boolean' && esp32Port.opened) {
-        return esp32Port;
-    }
-
-    if (esp32OpenPromise) {
-        return esp32OpenPromise;
-    }
-
-    esp32OpenPromise = (async () => {
-        let port = esp32Port;
-        if (!port) {
-            port = await navigator.serial.requestPort();
-            esp32Port = port;
-        }
-
-        if (typeof port.open === 'function' && !port.opened) {
-            await port.open({ baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' });
-        }
-
-        return port;
-    })();
-
-    try {
-        return await esp32OpenPromise;
-    } finally {
-        esp32OpenPromise = null;
-    }
-}
-
-function getEsp32Writer() {
-    if (!esp32Port || !esp32Port.writable) {
-        throw new Error('Cổng USB không sẵn sàng cho việc nạp firmware.');
-    }
-    if (!esp32Writer) {
-        esp32Writer = esp32Port.writable.getWriter();
-    }
-    return esp32Writer;
-}
-
-function releaseEsp32Writer() {
-    if (esp32Writer) {
-        try { esp32Writer.releaseLock(); } catch (e) {}
-        esp32Writer = null;
-    }
-}
-
-function getEsp32Reader() {
-    if (!esp32Port || !esp32Port.readable) {
-        throw new Error('Cổng USB không có stream đọc để lấy MAC.');
-    }
-    if (!esp32Reader) {
-        esp32Reader = esp32Port.readable.getReader();
-    }
-    return esp32Reader;
-}
-
-function releaseEsp32Reader() {
-    if (esp32Reader) {
-        try { esp32Reader.releaseLock(); } catch (e) {}
-        esp32Reader = null;
-    }
-}
-
-function normalizeMac(raw) {
-    const digits = String(raw || '').replace(/^0x/i, '').replace(/[^0-9A-Fa-f]/g, '');
-    if (digits.length !== 12) return null;
-    const parts = [];
-    for (let i = 0; i < digits.length; i += 2) parts.push(digits.slice(i, i + 2));
-    return parts.join(':').toUpperCase();
-}
-
-function extractMacCandidates(text) {
-    const matches = [];
-    const regex = /(?:MAC|mac|wifi|WIFI|STA|AP)[^0-9A-Fa-f]*(?:0x)?([0-9A-Fa-f]{12}|[0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5})/gi;
-    let match;
-    while ((match = regex.exec(text)) !== null) {
-        const candidate = normalizeMac(match[1]);
-        if (candidate) matches.push(candidate);
-    }
-    return [...new Set(matches)];
-}
-
-async function readEsp32Mac() {
-    try {
-        const port = await openEsp32Port();
-        if (!port || !port.readable) {
-            appendEsp32Console('Thiết bị không có stream đọc. Hãy kiểm tra lại cổng USB.');
-            return;
-        }
-
-        if (esp32Tag) {
-            esp32Tag.textContent = 'Đang đọc MAC';
-            esp32Tag.className = 'esp32-badge ready';
-        }
-
-        appendEsp32Console('Kết nối thành công. Đang nghe dữ liệu MAC từ board ESP32...');
-        esp32Reading = true;
-        const decoder = new TextDecoder();
-        const reader = getEsp32Reader();
-
-        while (esp32Reading) {
-            const { value, done } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value, { stream: true });
-            const macs = extractMacCandidates(chunk);
-            if (macs.length) {
-                esp32DetectedMac = macs[0];
-                appendEsp32Console(`MAC DETECTED: ${esp32DetectedMac}`);
-                if (esp32Tag) {
-                    esp32Tag.textContent = 'MAC đã phát hiện';
-                    esp32Tag.className = 'esp32-badge ready';
-                }
-                esp32Reading = false;
-                break;
-            }
-
-            const trimmed = chunk.trim();
-            if (trimmed) appendEsp32Console(trimmed);
-        }
-
-        releaseEsp32Reader();
-    } catch (error) {
-        appendEsp32Console(`LỖI LẤY MAC: ${error.message}`);
-        if (esp32Tag) {
-            esp32Tag.textContent = 'Không đọc được MAC';
-            esp32Tag.className = 'esp32-badge waiting';
-        }
-    }
-}
-
-async function ensureEsp32Flasher() {
-    if (!window.__esp32EsptoolModule) {
-        const mod = await import('https://unpkg.com/esptool-js/bundle.js');
-        window.__esp32EsptoolModule = mod;
-    }
-    return window.__esp32EsptoolModule;
-}
-
-async function eraseEsp32Flash() {
-    const eraseBeforeFlash = esp32EraseToggle ? esp32EraseToggle.checked : true;
-    if (!eraseBeforeFlash) {
-        appendEsp32Console('FLASH ERASE: bỏ qua xoá flash theo tùy chọn người dùng.');
-        setEsp32Progress(10);
-        return false;
-    }
-
-    appendEsp32Console('FLASH ERASE: sẽ xoá toàn bộ flash trong cùng quá trình nạp để tránh mở lại cổng USB.');
-    if (esp32Tag) {
-        esp32Tag.textContent = 'Sẽ xoá flash';
-        esp32Tag.className = 'esp32-badge waiting';
-    }
-    setEsp32Progress(10);
-    return true;
-}
-
-async function flashEsp32Firmware() {
-    if (esp32FlashBusy) {
-        appendEsp32Console('Flash đang chạy, vui lòng chờ quá trình hoàn tất.');
-        return;
-    }
-
-    esp32FlashBusy = true;
-    let esploader = null;
-
-    try {
-        const port = await openEsp32Port();
-        if (!port) {
-            throw new Error('Cổng USB chưa được chọn. Hãy chọn port ESP32 trước khi flash.');
-        }
-
-        let bytes;
-        if (selectedFirmware instanceof Uint8Array && selectedFirmware.length > 0) {
-            bytes = selectedFirmware;
-            appendEsp32Console(`Đang nạp firmware đã chọn: ${FIRMWARE_IDS.VNK3} (${(bytes.length / 1024).toFixed(1)} KB)`);
-        } else {
-            appendEsp32Console(`Tự động tải file từ thư mục VNK3: ${FIRMWARE_IDS.VNK3}`);
-            const data = await loadFirmwareById(FIRMWARE_IDS.VNK3);
-            selectedFirmware = data;
-            bytes = data;
-            appendEsp32Console(`Tải xong: ${(bytes.length / 1024).toFixed(1)} KB`);
-        }
-
-        const eraseBeforeFlash = esp32EraseToggle ? esp32EraseToggle.checked : true;
-        await eraseEsp32Flash();
-
-        if (esp32Tag) {
-            esp32Tag.textContent = 'Đang nạp firmware';
-            esp32Tag.className = 'esp32-badge ready';
-        }
-
-        const { ESPLoader, Transport } = await ensureEsp32Flasher();
-        const transport = new Transport(port, true);
-        esploader = new ESPLoader({
-            transport,
-            baudrate: 115200,
-            terminal: createEsp32Terminal(),
-            debugLogging: false
-        });
-
-        appendEsp32Console('Kết nối ESP32 và nhận dạng chip...');
-        appendEsp32Console('esptool.js');
-        appendEsp32Console(`Serial port WebSerial VendorID ${port.vendorId ? '0x' + port.vendorId.toString(16) : '0x0000'} ProductID ${port.productId ? '0x' + port.productId.toString(16) : '0x0000'}`);
-
-        const chipName = await esploader.main();
-        appendEsp32Console(`Chip nhận dạng: ${chipName || 'ESP32'}`);
-        setEsp32Progress(30);
-
-        await esploader.writeFlash({
-            fileArray: [{ data: bytes, address: 0x0000 }],
-            flashMode: 'keep',
-            flashFreq: 'keep',
-            flashSize: 'keep',
-            eraseAll: eraseBeforeFlash,
-            compress: true,
-            reportProgress: (fileIndex, written, total) => {
-                if (!total || total <= 0) return;
-                const raw = (written / total) * 70;
-                setEsp32Progress(30 + raw);
-            }
-        });
-
-        setEsp32Progress(100);
-        appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
-
-        if (esp32Tag) {
-            esp32Tag.textContent = 'Nạp thành công';
-            esp32Tag.className = 'esp32-badge ready';
-        }
-
-        try { await esploader.after('hard_reset'); } catch (e) {}
-    } catch (error) {
-        const message = error && error.message ? error.message : String(error);
-        appendEsp32Console(`LỖI NẠP: ${message}`);
-        if (esp32Tag) {
-            esp32Tag.textContent = 'Nạp thất bại';
-            esp32Tag.className = 'esp32-badge waiting';
-        }
-    } finally {
-        esp32FlashBusy = false;
-        setEsp32Progress(100);
-        releaseEsp32Writer();
-
-        if (esploader && typeof esploader.transport?.disconnect === 'function') {
-            try { await esploader.transport.disconnect(); } catch (e) {}
-        }
-
-        await closeEsp32Port();
-    }
-}
-
-if (esp32CloseBtn) {
-    esp32CloseBtn.addEventListener('click', async () => {
-        esp32Reading = false;
-        if (esp32Reader) {
-            try { esp32Reader.cancel(); } catch (e) {}
-            releaseEsp32Reader();
-        }
-        await closeEsp32Port();
-        const panel = document.getElementById('esp32HubPanel');
-        if (panel) panel.classList.add('hidden');
-    });
-}
-
-if (esp32MacBtn) {
-    esp32MacBtn.addEventListener('click', readEsp32Mac);
-}
-
-if (esp32FlashBtn) {
-    esp32FlashBtn.addEventListener('click', flashEsp32Firmware);
-}
 
 // ============================================================================
 // INITIALIZATION
