@@ -1469,7 +1469,8 @@ async function openEsp32Port() {
             await esp32Port.open({ baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none' });
             return esp32Port;
         } catch (error) {
-            if (error && /already open/i.test(error.message || String(error))) {
+            const message = error && error.message ? error.message : String(error);
+            if (/already open/i.test(message)) {
                 return esp32Port;
             }
             throw error;
@@ -1589,43 +1590,16 @@ async function eraseEsp32Flash() {
     if (!eraseBeforeFlash) {
         appendEsp32Console('FLASH ERASE: bỏ qua xoá flash theo tùy chọn người dùng.');
         setEsp32Progress(10);
-        return;
+        return false;
     }
 
-    appendEsp32Console('FLASH ERASE: bắt đầu xoá toàn bộ flash trước khi nạp...');
+    appendEsp32Console('FLASH ERASE: sẽ xoá toàn bộ flash trong cùng quá trình nạp để tránh mở lại cổng USB.');
     if (esp32Tag) {
-        esp32Tag.textContent = 'Đang xoá flash';
+        esp32Tag.textContent = 'Sẽ xoá flash';
         esp32Tag.className = 'esp32-badge waiting';
     }
     setEsp32Progress(10);
-
-    const port = await openEsp32Port();
-    const { ESPLoader, Transport } = await ensureEsp32Flasher();
-    const transport = new Transport(port, true);
-    const esploader = new ESPLoader({
-        transport,
-        baudrate: 115200,
-        terminal: createEsp32Terminal(),
-        debugLogging: false
-    });
-
-    try {
-        await esploader.main();
-        await esploader.writeFlash({
-            fileArray: [{ data: new Uint8Array([0x00]), address: 0x0000 }],
-            flashMode: 'keep',
-            flashFreq: 'keep',
-            flashSize: 'keep',
-            eraseAll: true,
-            compress: true,
-            reportProgress: () => {}
-        });
-        appendEsp32Console('FLASH ERASE: xoá flash hoàn tất. Tiếp tục quá trình nạp firmware.');
-        setEsp32Progress(15);
-    } finally {
-        try { await transport.disconnect(); } catch (e) {}
-        await closeEsp32Port();
-    }
+    return true;
 }
 
 async function flashEsp32Firmware() {
@@ -1651,12 +1625,7 @@ async function flashEsp32Firmware() {
         }
 
         const eraseBeforeFlash = esp32EraseToggle ? esp32EraseToggle.checked : true;
-        if (eraseBeforeFlash) {
-            await eraseEsp32Flash();
-        } else {
-            setEsp32Progress(15);
-            appendEsp32Console('FLASH: bỏ qua xoá flash theo lựa chọn. Bắt đầu ghi firmware.');
-        }
+        await eraseEsp32Flash();
 
         if (esp32Tag) {
             esp32Tag.textContent = 'Đang nạp firmware';
@@ -1682,7 +1651,7 @@ async function flashEsp32Firmware() {
         setEsp32Progress(30);
 
         await esploader.writeFlash({
-            fileArray: [{ data: bytes, address: 0x1000 }],
+            fileArray: [{ data: bytes, address: 0x0000 }],
             flashMode: 'keep',
             flashFreq: 'keep',
             flashSize: 'keep',
