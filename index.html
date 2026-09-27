@@ -381,7 +381,7 @@
                     </div>
 
                     <div id="espInstallWrap" class="esp-button-wrap hidden">
-                        <esp-web-install-button id="espInstallButton" manifest=""></esp-web-install-button>
+                        <esp-web-install-button id="espInstallButton" manifest="./firmware/ESP32/manifest.json"></esp-web-install-button>
                     </div>
                     <div id="espInstallError" class="hidden mt-3 rounded-none border border-red-500/60 bg-red-500/10 p-2 text-xs text-red-200">
                         ESP32 firmware chưa sẵn sàng để cài đặt. Vui lòng thêm file firmware vào thư mục <strong>firmware/ESP32</strong> và đảm bảo manifest trỏ đúng tới file .bin.
@@ -1330,6 +1330,9 @@ eraseBtn.addEventListener('click', () => runOperation('ERASE'));
 
 // Load system firmware on page load
 document.addEventListener('DOMContentLoaded', function() {
+    if (espInstallButton && !espInstallButton.getAttribute('manifest')) {
+        espInstallButton.setAttribute('manifest', './firmware/ESP32/manifest.json');
+    }
     log('SYSTEM', 'AmebaD Flasher v2.1.0 initialized');
     loadSystemFirmware();
 });
