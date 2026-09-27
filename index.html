@@ -1444,22 +1444,26 @@ function createEsp32Terminal() {
 
 async function closeEsp32Port() {
     esp32Reading = false;
+
     if (esp32Reader) {
         try { await esp32Reader.cancel(); } catch (e) {}
         releaseEsp32Reader();
     }
+
     if (esp32Writer) {
         try { esp32Writer.releaseLock(); } catch (e) {}
         esp32Writer = null;
     }
+
     if (esp32Port) {
         try {
-            if (esp32Port.opened && typeof esp32Port.close === 'function') {
+            if (typeof esp32Port.opened === 'boolean' && esp32Port.opened && typeof esp32Port.close === 'function') {
                 await esp32Port.close();
             }
         } catch (e) {}
         esp32Port = null;
     }
+
     esp32OpenPromise = null;
 }
 
@@ -1468,15 +1472,11 @@ async function openEsp32Port() {
         throw new Error('Web Serial không hỗ trợ trên trình duyệt này. Hãy dùng Chrome/Edge.');
     }
 
-    if (!window.isSecureContext && window.location.protocol !== 'file:') {
-        appendEsp32Console('Lưu ý: Web Serial nên chạy qua http://localhost:8000 hoặc HTTPS để hoạt động ổn định.');
-    }
-
     if (window.location.protocol === 'file:') {
         appendEsp32Console('Lưu ý: mở trang qua http://localhost:8000 hoặc HTTPS, vì file:// có thể chặn Web Serial và load firmware.');
     }
 
-    if (esp32Port && esp32Port.opened) {
+    if (esp32Port && typeof esp32Port.opened === 'boolean' && esp32Port.opened) {
         return esp32Port;
     }
 
@@ -1489,11 +1489,10 @@ async function openEsp32Port() {
             esp32Port = await navigator.serial.requestPort();
         }
 
-        if (esp32Port && esp32Port.opened) {
+        if (esp32Port && typeof esp32Port.opened === 'boolean' && esp32Port.opened) {
             return esp32Port;
         }
 
-        // Không gọi port.open() ở đây: esptool.js Transport sẽ mở cổng đúng cách theo chuẩn.
         return esp32Port;
     })();
 
@@ -1516,7 +1515,7 @@ function getEsp32Writer() {
 
 function releaseEsp32Writer() {
     if (esp32Writer) {
-        esp32Writer.releaseLock();
+        try { esp32Writer.releaseLock(); } catch (e) {}
         esp32Writer = null;
     }
 }
@@ -1533,7 +1532,7 @@ function getEsp32Reader() {
 
 function releaseEsp32Reader() {
     if (esp32Reader) {
-        esp32Reader.releaseLock();
+        try { esp32Reader.releaseLock(); } catch (e) {}
         esp32Reader = null;
     }
 }
@@ -1560,22 +1559,25 @@ function extractMacCandidates(text) {
 async function readEsp32Mac() {
     try {
         const port = await openEsp32Port();
-        if (!port.readable) {
+        if (!port || !port.readable) {
             appendEsp32Console('Thiết bị không có stream đọc. Hãy kiểm tra lại cổng USB.');
             return;
         }
+
         if (esp32Tag) {
             esp32Tag.textContent = 'Đang đọc MAC';
             esp32Tag.className = 'esp32-badge ready';
         }
-        appendEsp32Console('Kết nối thành công. Đang nghe dữ liệu MAC từ board ESP32...');
 
+        appendEsp32Console('Kết nối thành công. Đang nghe dữ liệu MAC từ board ESP32...');
         esp32Reading = true;
         const decoder = new TextDecoder();
         const reader = getEsp32Reader();
+
         while (esp32Reading) {
             const { value, done } = await reader.read();
             if (done) break;
+
             const chunk = decoder.decode(value, { stream: true });
             const macs = extractMacCandidates(chunk);
             if (macs.length) {
@@ -1588,9 +1590,11 @@ async function readEsp32Mac() {
                 esp32Reading = false;
                 break;
             }
+
             const trimmed = chunk.trim();
             if (trimmed) appendEsp32Console(trimmed);
         }
+
         releaseEsp32Reader();
     } catch (error) {
         appendEsp32Console(`LỖI LẤY MAC: ${error.message}`);
@@ -1634,8 +1638,12 @@ async function flashEsp32Firmware() {
 
     esp32FlashBusy = true;
     let esploader = null;
+
     try {
         const port = await openEsp32Port();
+        if (!port) {
+            throw new Error('Cổng USB chưa được chọn. Hãy chọn port ESP32 trước khi flash.');
+        }
 
         let bytes;
         if (selectedFirmware instanceof Uint8Array && selectedFirmware.length > 0) {
@@ -1655,10 +1663,6 @@ async function flashEsp32Firmware() {
         if (esp32Tag) {
             esp32Tag.textContent = 'Đang nạp firmware';
             esp32Tag.className = 'esp32-badge ready';
-        }
-
-        if (!port) {
-            throw new Error('Cổng USB chưa được chọn. Hãy chọn port ESP32 trước khi flash.');
         }
 
         if (port && typeof port.open === 'function' && !port.opened) {
@@ -1684,6 +1688,7 @@ async function flashEsp32Firmware() {
         appendEsp32Console('Kết nối ESP32 và nhận dạng chip...');
         appendEsp32Console('esptool.js');
         appendEsp32Console(`Serial port WebSerial VendorID ${port.vendorId ? '0x' + port.vendorId.toString(16) : '0x0000'} ProductID ${port.productId ? '0x' + port.productId.toString(16) : '0x0000'}`);
+
         const chipName = await esploader.main();
         appendEsp32Console(`Chip nhận dạng: ${chipName || 'ESP32'}`);
         setEsp32Progress(30);
@@ -1704,10 +1709,12 @@ async function flashEsp32Firmware() {
 
         setEsp32Progress(100);
         appendEsp32Console('NẠP THÀNH CÔNG: firmware đã được ghi xong.');
+
         if (esp32Tag) {
             esp32Tag.textContent = 'Nạp thành công';
             esp32Tag.className = 'esp32-badge ready';
         }
+
         try { await esploader.after('hard_reset'); } catch (e) {}
     } catch (error) {
         const message = error && error.message ? error.message : String(error);
@@ -1720,9 +1727,11 @@ async function flashEsp32Firmware() {
         esp32FlashBusy = false;
         setEsp32Progress(100);
         releaseEsp32Writer();
+
         if (esploader && typeof esploader.transport?.disconnect === 'function') {
             try { await esploader.transport.disconnect(); } catch (e) {}
         }
+
         await closeEsp32Port();
     }
 }
