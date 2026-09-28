@@ -413,7 +413,7 @@ async function selectFirmware(type, evt) {
     switch(type) {
         case 'BW16':
             name = '[BW16]';
-            details = 'RTL8720DN BW16-KIT + 6 BUTTON + 0.96 OLED';
+            details = 'RTL8720DN BW16 CHIP TX RX';
             break;
         case 'ESP32':
             name = '[ESP32]';
@@ -920,4 +920,3 @@ document.addEventListener('DOMContentLoaded', function() {
     log('SYSTEM', 'AmebaD Flasher v2.1.0 initialized');
     loadSystemFirmware();
 });
-
